@@ -2,7 +2,7 @@
 
 [My Notes](notes.md)
 
-Not really sure what my startup will be yet, but this is to make sure I understand how to use git. Now (hopefully) this change will be reflected in VS code.
+Not really sure what my startup will be yet, but this is to make sure I understand how to use git. Now (hopefully) this change will be reflected in VS code.  
 Does this go to a new line?
 
 
