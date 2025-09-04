@@ -1,6 +1,7 @@
 # CS 260 Notes
 
 [My startup - Simon](https://simon.cs260.click)
+Just trying out git. Also, seeing the code underneath git is pretty [cool](https:/letterboxd.com/nicholasA113/).
 
 ## Helpful links
 
