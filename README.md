@@ -22,7 +22,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ### Elevator pitch
 
-Imagine a fun, interactive, community-based version of Mad Libs! From pre-written stories, users can fill in the blanks to create their own wacky versions of these stories and post them to a community board for otherrs to see. Be as crazy and funn as you can be!
+Imagine a fun, interactive, community-based version of Mad Libs! From pre-written stories, users can fill in the blanks to create their own wacky versions of these stories and post them to a community board for otherrs to see. Be as crazy and funny as you can be!
 
 ### Design
 
@@ -31,20 +31,36 @@ Imagine a fun, interactive, community-based version of Mad Libs! From pre-writte
 ![Design image3](mockup3.jpg)\
 ![Design image4](mockup4.jpg)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+How the backend works for creating, storing, and sharing stories.
 
 ```mermaid
 sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
+    actor User
+    participant App
+    participant Server
+    participant Database
+
+    User ->> App: Create story
+    App ->> Server: Save story
+    Server ->> Database: Store story
+
+    User ->> App: View community board
+    App ->> Server: Request stories
+    Server ->> Database: Get public stories
+    Database -->> Server: Return stories
+    Server -->> App: Send stories
+    App -->> User: Show stories
 ```
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Secure login via HTTPS
+- Select pre-determined stories to create
+- Input of nouns, adjectives, etc., for each selected story
+- Display of newly created story
+- Options to privately save story and publicy share story to a community board
+- Tabs/Pages for creating stories, seeing your saved stories (both private and public), and seeing community board (public) stories
+- Ability to like community board stories. Stories are ranked on said page from most likes to lowest.
 
 ### Technologies
 
