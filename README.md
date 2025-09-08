@@ -31,7 +31,7 @@ Imagine a fun, interactive, community-based version of Mad Libs! From pre-writte
 ![Design image3](mockup3.jpg)\
 ![Design image4](mockup4.jpg)
 
-How the backend works for creating, storing, and sharing stories.
+How the backend works for creating, saving, and seeing stories.
 
 ```mermaid
 sequenceDiagram
@@ -66,12 +66,13 @@ sequenceDiagram
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Multiple pages for the app. A login/register page first appears, which takes to you the main landing page. Automatically open to a "Create Story" page, with tabs to choose seeing saved stories, and another for seeing community board stories.
+- - Create story page takes you to other pages in the process of creating a Mad Lib.
+- **CSS** - Visually pleasing styling with good fonts, color choices, and whitespace.
+- **React** - Provides login capabilities, selection of stories, text input of words, as well as buttons to share and save stories.
+- **Service** - Endpoints for login, submitting stories, and retrieving stories.
+- **DB/Login** - Stores login info, stories that are selected to be saved, whether they are private or public, and which pages they should appear on depending on visibility. Also stores the structure for each pre-written story.
+- **WebSocket** - Community board page lists all publicly shared stories across all users of the app.
 
 ## 🚀 AWS deliverable
 
