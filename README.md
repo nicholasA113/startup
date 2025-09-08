@@ -12,17 +12,9 @@ A startup application that provides entertainment for users with pre-written sto
 
 ## 🚀 Specification Deliverable
 
-For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
-
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
-
 ### Elevator pitch
 
-Imagine a fun, interactive, community-based version of Mad Libs! From pre-written stories, users can fill in the blanks to create their own wacky versions of these stories and post them to a community board for otherrs to see. Be as crazy and funny as you can be!
+Imagine a fun, interactive, community-based version of Mad Libs! From pre-written stories, users can fill in the blanks to create their own wacky versions of these stories and post them to a community board for others to see. Be as crazy and funny as you can be!
 
 ### Design
 
@@ -55,7 +47,7 @@ sequenceDiagram
 ### Key features
 
 - Secure login via HTTPS
-- Select pre-determined stories to create
+- Select pre-determined stories to create from
 - Input of nouns, adjectives, etc., for each selected story
 - Display of newly created story
 - Options to privately save story and publicy share story to a community board
@@ -63,16 +55,13 @@ sequenceDiagram
 - Ability to like community board stories. Stories are ranked on said page from most likes to lowest.
 
 ### Technologies
-
-I am going to use the required technologies in the following ways.
-
 - **HTML** - Multiple pages for the app. A login/register page first appears, which takes to you the main landing page. Automatically open to a "Create Story" page, with tabs to choose seeing saved stories, and another for seeing community board stories.
-- - Create story page takes you to other pages in the process of creating a Mad Lib.
+    - Create story page takes you to other pages in the process of creating a Mad Lib.
 - **CSS** - Visually pleasing styling with good fonts, color choices, and whitespace.
 - **React** - Provides login capabilities, selection of stories, text input of words, as well as buttons to share and save stories.
 - **Service** - Endpoints for login, submitting stories, and retrieving stories.
 - **DB/Login** - Stores login info, stories that are selected to be saved, whether they are private or public, and which pages they should appear on depending on visibility. Also stores the structure for each pre-written story.
-- **WebSocket** - Community board page lists all publicly shared stories across all users of the app.
+- **WebSocket** - Community board page lists all publicly shared stories across all users of the app. Gathers all stories at the time the "Community Board" button is selected.
 
 ## 🚀 AWS deliverable
 
