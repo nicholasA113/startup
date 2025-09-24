@@ -76,11 +76,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 **Proper HTML element usage** - Added headers, section dividers, and footers for each page.  
 **Links** - Added link to my Github repository at the bottom of each page. Used the "onclick" HTML feature to navigate from one page to another when clicking on a button.  
 **Text** - Included text on each page to communicate the purpose of each page and what the user can do with it.  
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
+**3rd party API placeholder** - Added text fields for the "write" page, which comes after clicking on a story from the main page. Currently there are just placeholder fields for a noun, verb, and afjective, but it'll dynamically change depending on what story is selected.
 **Images** - Have not included images in my startup application.  
 **Login placeholder** - index.html includes text fields to insert a username and password, as well as "login" and "create" buttons.  
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+**DB data placeholder** - Placeholder data represented under the "My Stories" tab. Page will populate with all of the user's stories from the database.  
+**WebSocket placeholder** - Have not included live-update functionallity for my startup.  
 
 ## 🚀 CSS deliverable
 
