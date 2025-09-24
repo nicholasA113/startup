@@ -72,13 +72,13 @@ Simon sub-domain: https://simon.madlibs.click
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-**HTML pages** - Added HTML pages for each button of the application, as well as any additional pages when navigating through a certain page--notably the Create Story page
-**Proper HTML element usage** - Added headers, section dividers, and footers for each page. 
-**Links** - Added link to my Github repository at the bottom of each page. Used the "onclick" HTML feature to navigate from one page to another when clicking on a button
-**Text** - Included text on each page to communicate the purpose of each page and what the user can do with it.
+**HTML pages** - Added HTML pages for each button of the application, as well as any additional pages when navigating through a certain page--notably the Create Story page\n
+**Proper HTML element usage** - Added headers, section dividers, and footers for each page.\n
+**Links** - Added link to my Github repository at the bottom of each page. Used the "onclick" HTML feature to navigate from one page to another when clicking on a button\n
+**Text** - Included text on each page to communicate the purpose of each page and what the user can do with it.\n
 - [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-**Images** - Have not included images in my startup application
-**Login placeholder** - index.html includes text fields to insert a username and password, as well as "login" and "create" buttons
+**Images** - Have not included images in my startup application\n
+**Login placeholder** - index.html includes text fields to insert a username and password, as well as "login" and "create" buttons\n
 - [ ] **DB data placeholder** - I did not complete this part of the deliverable.
 - [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
 
