@@ -76,8 +76,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 **Proper HTML element usage** - Added headers, section dividers, and footers for each page.  
 **Links** - Added link to my Github repository at the bottom of each page. Used the "onclick" HTML feature to navigate from one page to another when clicking on a button.  
 **Text** - Included text on each page to communicate the purpose of each page and what the user can do with it.  
-**3rd party API placeholder** - 3rd party API implementation will take place on the main createstory.html page that will serve as a random quote generator.
-**Images** - Added image to the main page of the application (createstory.html) 
+**3rd party API placeholder** - 3rd party API implementation will take place on the main createstory.html page that will serve as a random quote generator.  
+**Images** - Added image to the main page of the application (createstory.html)  
 **Login placeholder** - index.html includes text fields to insert a username and password, as well as "login" and "create" buttons.  
 **DB data placeholder** - Placeholder data represented under the "My Stories" tab. Page will populate with all of the user's stories from the database.  
 **WebSocket placeholder** - Live-update functionality enabled for "communityboard.html". Once a user saves their story, it will be updated under the community board page"
