@@ -1,19 +1,28 @@
+<head>
+  <link rel="stylesheet" href="index.css">
+</head>
+
 <body>
-  <h1>Mad Libs©</h1>
-  <p><i>Welcome to Mad Libs©! Please login or signup to get started.</i></p>
+  <header>
+    <h1>Mad Libs©</h1>
+  </header>
   <section>
+    <div id="welcome">
+      <p><i>Welcome to Mad Libs©! Please login or signup to get started.</i></p>
+    </div>
+    <div id="user-password">
     <label for="text">Username: </label>
     <input type="text" id="username" name="varUsername" placeholder="username" />
     <br>
     <label for="text">Password: </label>
     <input type="text" id="password" name="varPassword" placeholder="password" />
-  </section>
-  <section>
+    </div>
+    <br>
     <button onclick="location.href='createstory.html'">Login</button>
     <button onclick="location.href='createstory.html'">Create</button>
   </section>
-    <footer>
-      <hr>
-      <a href="https://github.com/nicholasA113/startup">Github</a>
-    </footer>
+  <footer>
+    <hr>
+    <a href="https://github.com/nicholasA113/startup">Github</a>
+  </footer>
 </body>
