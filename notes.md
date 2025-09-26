@@ -1,7 +1,8 @@
 # CS 260 Notes
 
 [My startup - Simon](https://simon.cs260.click)
-[My own startup] (https://startup.madlibs.click)
+[My own startup] (https://startup.madlibs.click)  
+./deployFiles.sh -k C:/Users/nicho/OneDrive/Desktop/"Computer Science"/cs260/production.pem -h madlibs.click -s startup
 
 ## Helpful links
 
