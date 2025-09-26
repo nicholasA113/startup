@@ -2,11 +2,15 @@
   font-family: 'Courier New', monospace;
   color: white;
   letter-spacing: 2px;
-  text-shadow:
-    -1px -1px 0 black,
-     1px -1px 0 black,
-    -1px  1px 0 black,
-     1px  1px 0 black;
+  border-radius: 5px;
+}
+
+header, section{
+  text-align: center;
+}
+
+h1 {
+  font-size: 56px;
 }
 
 body {
@@ -19,13 +23,19 @@ body {
   color: black;
 }
 
+#page-topic{
+  font-size: 40px;
+}
+
 section{
   background-color: #9CA5B1;
   color: black;
 }
 
 footer{
-  background-color: #44474D
+  background-color: #44474D;
+  text-align: right;
+  font-size: 20px;
 }
 
 button {
