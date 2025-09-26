@@ -1,3 +1,41 @@
-* {font-family: courier-new; 
-    color: white;
-  }
+* {
+  font-family: 'Courier New', monospace;
+  color: white;
+  letter-spacing: 2px;
+  text-shadow:
+    -1px -1px 0 black,
+     1px -1px 0 black,
+    -1px  1px 0 black,
+     1px  1px 0 black;
+}
+
+body {
+  background-color: #D5D0C4;
+  color: black;
+}
+
+#page-guidance {
+  background-color: #3D5E6B;
+  color: black;
+}
+
+section{
+  background-color: #9CA5B1;
+  color: black;
+}
+
+footer{
+  background-color: #44474D
+}
+
+button {
+  background-color: #877C73;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+  
