@@ -23,6 +23,11 @@ body {
   color: black;
 }
 
+#create-story {
+  text-align: center;
+  font-size: 22px;
+}
+
 #page-topic{
   font-size: 40px;
 }
