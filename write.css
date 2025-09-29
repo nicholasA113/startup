@@ -5,6 +5,11 @@
   border-radius: 5px;
 }
 
+input[type="text"] {
+  color: black;
+  background-color: white;
+}
+
 body {
   background-color: #D5D0C4;
   color: black;
@@ -14,12 +19,6 @@ body {
   background-color: #3D5E6B;
   color: black;
   text-align: center;
-}
-
-#text-fields {
-  background-color: #9CA5B1;
-  color: black;
-  padding: 26px;
 }
 
 button {
@@ -33,8 +32,26 @@ button {
   margin: 5px;
 }
 
-table {
-    margin-left: 275px;
+#text-fields {
+  display: flex;
+  justify-content: center;
+  background-color: #9CA5B1;
+  color: black;
+  padding: 26px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#generate-button{
+  background-color: #9CA5B1;
+  color: black;
+  padding: 26px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 #generate {
