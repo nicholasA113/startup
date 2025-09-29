@@ -5,6 +5,11 @@
   border-radius: 5px;
 }
 
+input[type="text"] {
+  color: black;
+  background-color: white;
+}
+
 body {
   background-color: #D5D0C4;
   color: black;
