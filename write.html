@@ -1,24 +1,36 @@
+<head>
+  <link rel="stylesheet" href="write.css">
+</head>
+
 <body>
-  <div>
+  <header id="page-guidance">
     <h1>Mad Libs©</h1>
       <button onclick="location.href='createstory.html'">Create Story</button>
       <button onclick="location.href='mystories.html'">My Stories</button>
       <button onclick="location.href='communityboard.html'">Community Board</button>
       <button onclick="location.href='about.html'">About</button>
     <hr>
-    <section>
-      <label for="text">Noun: </label>
-      <input type="text" id="noun1" name="varNoun1"/><br>
-      <label for="text">Adjective: </label>
-      <input type="text" id="adj1" name="varAdj1"/><br>
-      <label for="text">Verb: </label>
-      <input type="text" id="verb1" name="varVerb1"/><br>
-    </section>
+  </header>
+  <section id="text-fields">
+    <table>
+      <tr>
+        <td id="word-type"><label for="text">Noun: </label></td>
+        <td><input type="text" id="noun1" name="varNoun1"/></td>
+      </tr>
+      <tr>
+        <td id="word-type"><label for="text">Adjective: </label></td>
+        <td><input type="text" id="adj1" name="varAdj1"/></td>
+      </tr>
+      <tr>
+        <td id="word-type"><label for="text">Verb: </label></td>
+        <td><input type="text" id="verb1" name="varVerb1"/></td>
+      </tr>
+    </table>
     <br>
-    <button onclick="location.href='read.html'">Generate Story</button>
-  </div>
-    <footer>
-      <hr>
-      <a href="https://github.com/nicholasA113/startup">Github</a>
-    </footer>
+    <button id="generate" onclick="location.href='read.html'">Generate Story</button>
+  </section>
+  <footer>
+    <hr>
+    <a href="https://github.com/nicholasA113/startup">Github</a>
+  </footer>
 </body>
