@@ -13,6 +13,10 @@ h1 {
   font-size: 56px;
 }
 
+img {
+  border: 5px black;
+}
+
 body {
   background-color: #D5D0C4;
   color: black;
