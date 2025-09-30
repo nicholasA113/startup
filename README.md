@@ -88,10 +88,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 **Header, footer, and main content body** - styled header, footer, and main content bodies different from one another. There's a universal background, but differing colors between sections to contrast them.  
 **Navigation elements** - page navigation at the top of each page navigates to the correct page, along with buttons navigating to the next pages/steps for selecting, writing, and reading a story. Stories under "my stories" and "community board" also navigate to a page to read the story.  
-- [ ] **Responsive to window resizing** - I did not complete this part of the deliverable.
+**Responsive to window resizing** - Elements still on display when zooming in or out of the page  
 **Application elements** - Elements of the application are mostly buttons, leading you to differnet pages/parts the application. Text fields are also present for login as well as writing the necessary words for the story. Checkboxes are also found on story.html to allow for visibility on community board page and favorites section of my stories.  
 **Application text content** - Varying styles and font sizes for application text content. Underline and bolded page titles contrast from the simple text found below. Italicized text is also present for a few various elements.
-- [ ] **Application images** - I did not complete this part of the deliverable.
+**Application images** - Created border around image element  
 
 ## 🚀 React part 1: Routing deliverable
 
