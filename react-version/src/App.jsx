@@ -1,25 +1,26 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import about from './components/about'
-import communityboard from './components/communityboard'
-import createstory from './components/createstory'
-import index from './components/index'
-import mystories from './components/mystories'
-import read from './components/read'
-import story from './components/story'
-import write from './components/write'
-import './App.css';
+import About from './components/about'
+import CommunityBoard from './components/communityboard'
+import CreateStory from './components/createstory'
+import Index from './components/index'
+import MyStories from './components/mystories'
+import Read from './components/read'
+import Story from './components/story'
+import Write from './components/write'
 
 function App() {
 
   return (
     <Router>
       <Routes>
-        <route path="/" element={<index />} />
-        <route path="/createstory" element={<createstory />} />
-        <route path="/mystories" element={<mystories />} />
-        <route path="/story" element={<story />} />
-        <route path="/communityboard" element={<communityboard />} />
-        <route path="/about" element={<about />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/createstory" element={<CreateStory />} />
+        <Route path="/mystories" element={<MyStories />} />
+        <Route path="/story" element={<Story />} />
+        <Route path="/communityboard" element={<CommunityBoard />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/read" element={<Read />} />
+        <Route path="/write" element={<Write />} />
       </Routes>
     </Router>
   );

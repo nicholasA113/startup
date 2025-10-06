@@ -1,7 +1,7 @@
 import '../write.css';
 import { Link } from 'react-router-dom';
 
-export function write(){
+export function Write(){
     return(
         <>
             <header id="page-guidance">

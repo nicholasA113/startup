@@ -1,7 +1,7 @@
 import '../read.css';
 import { Link } from 'react-router-dom';
 
-export function read(){
+export function Read(){
     return(
         <>
             <header id="page-guidance">

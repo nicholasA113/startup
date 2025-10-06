@@ -1,7 +1,7 @@
 import '../communityboard.css';
 import { Link } from 'react-router-dom';
 
-export function mystories(){
+export function MyStories(){
     return(
         <>
             <header id="page-guidance">

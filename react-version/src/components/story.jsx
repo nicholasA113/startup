@@ -1,7 +1,7 @@
 import '../read.css';
 import { Link } from 'react-router-dom';
 
-export function story(){
+export function Story(){
     return (
         <>
             <header id="page-guidance">

@@ -1,7 +1,7 @@
 import '../index.css';
 import { Link } from 'react-router-dom';
 
-export function index(){
+export function Index(){
     return (
         <>
             <header>
