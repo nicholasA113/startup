@@ -1,10 +1,11 @@
-import '../read.css';
+import '../communityboard.css';
 import { Link } from 'react-router-dom';
 
-export function story(){
+export function communityboard(){
     return (
         <>
             <header id="page-guidance">
+                <br />
                 <h1>Mad Libs©</h1>
                 <Link to="/createstory" className="button">Create Story</Link>
                 <Link to="/mystories" className="button">MyStories</Link>
@@ -13,16 +14,18 @@ export function story(){
                 <hr />
             </header>
             <section>
-                <header id="storyTitle"><b><u>Story Title</u></b></header>
-                <p id="username"><i>by [username]</i></p>
-                <p id="storyContent">Lorum Ipsum Dolor</p>
+                <header id="page-title"><u><b>Community Board</b></u></header>
                 <br />
-                <div id="checkbox-area">
-                <label htmlFor="checkbox1">Post to Community Board?</label>
-                <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
-                <label htmlFor="checkbox2">  |  Save Story to Favorites?</label>
-                <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2"/>
-                </div>
+                <Link to="/story" className="story-card">
+                    <b>The Haunted Mansion</b>
+                    <p>by TrashBoat1848</p>
+                    <p>5❤️</p>
+                </Link>
+                <Link to="/story" className="story-card">
+                    <b>New Sports Class</b>
+                    <p>by TheAmazingSpider-Man</p>
+                    <p>3❤️</p>
+                </Link>
             </section>
             <footer>
                 <hr />

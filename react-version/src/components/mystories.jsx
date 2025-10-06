@@ -1,4 +1,4 @@
-import './communityboard.css';
+import '../communityboard.css';
 import { Link } from 'react-router-dom';
 
 export function mystories(){

@@ -1,10 +1,10 @@
-import '../read.css';
+import '../about.css';
 import { Link } from 'react-router-dom';
 
-export function read(){
-    return(
+export function about(){
+    return (
         <>
-            <header id="page-guidance">
+            <div>
                 <br />
                 <h1>Mad Libs©</h1>
                 <Link to="/createstory" className="button">Create Story</Link>
@@ -12,17 +12,13 @@ export function read(){
                 <Link to="/communityboard" className="button">Community Board</Link>
                 <Link to="/about" className="button">About</Link>
                 <hr />
-            </header>
+            </div>
             <section>
-                <header id="storyTitle"><b><u>Story Title</u></b></header>
-                <p id="username"><i>by [username]</i></p>
-                <p id="storyContent">Lorum Ipsum Dolor</p>
-                <br />
-                <div>
-                    <Link to="/mystories" className="button">Save Story</Link>
-                    <Link to="/createstory" className="button">Delete Story</Link>
-                    <Link to="/createstory" className="button">Create Another Story</Link>
-                </div>
+                <b><u>About</u></b>
+                <p>A community-based version of the popular wacky storytelling activity!</p>
+                <aside>
+                    <i>Created by Nicholas Erickson</i>
+                </aside>
             </section>
             <footer>
                 <hr />

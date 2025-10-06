@@ -1,4 +1,4 @@
-import './write.css';
+import '../write.css';
 import { Link } from 'react-router-dom';
 
 export function write(){
