@@ -1,10 +1,11 @@
 import './read.css';
 import { Link } from 'react-router-dom';
 
-export function story(){
-    return (
+export function read(){
+    return(
         <>
             <header id="page-guidance">
+                <br />
                 <h1>Mad Libs©</h1>
                 <Link to="/createstory" className="button">Create Story</Link>
                 <Link to="/mystories" className="button">MyStories</Link>
@@ -17,11 +18,10 @@ export function story(){
                 <p id="username"><i>by [username]</i></p>
                 <p id="storyContent">Lorum Ipsum Dolor</p>
                 <br />
-                <div id="checkbox-area">
-                <label htmlFor="checkbox1">Post to Community Board?</label>
-                <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
-                <label htmlFor="checkbox2">  |  Save Story to Favorites?</label>
-                <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2"/>
+                <div>
+                    <Link to="/mystories" className="button">Save Story</Link>
+                    <Link to="/createstory" className="button">Delete Story</Link>
+                    <Link to="/createstory" className="button">Create Another Story</Link>
                 </div>
             </section>
             <footer>
