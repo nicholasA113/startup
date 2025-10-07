@@ -38,9 +38,10 @@ export default function App() {
                         About
                     </NavLink>
                     </li>
-                </menu>
-            </nav>
+                    </menu>
+                </nav>
             </header>
+
             <Routes>
                 <Route path='/' element={<Login />} exact />
                 <Route path='/play' element={<Play />} />
