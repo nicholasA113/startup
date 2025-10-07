@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "react": "^19.2.0",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.3"
+  },
+  "name": "startup",
+  "version": "1.0.0",
+  "description": "[My Notes](notes.md)",
+  "main": "index.js",
+  "devDependencies": {
+    "vite": "^7.1.9"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholasA113/startup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicholasA113/startup/issues"
+  },
+  "homepage": "https://github.com/nicholasA113/startup#readme"
+}
