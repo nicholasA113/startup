@@ -11,10 +11,10 @@ export function About(){
             <div id="page-guidance">
                 <br />
                 <h1 id="mad-libs-title">Mad Libs©</h1>
-                <Button className="buttons" onClick={() => navigate(<CreateStory />)}>Create Story</Button>
-                <Button className="buttons" onClick={() => navigate(<MyStories />)}>My Stories</Button>
-                <Button className="buttons" onClick={() => navigate(<CommunityBoard />)}>Community Board</Button>
-                <Button className="buttons" onClick={() => navigate(<About />)}>About</Button>
+                <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
+                <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
+                <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
+                <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
                 <hr />
             </div>
             <section id="about-section">
