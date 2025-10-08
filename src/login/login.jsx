@@ -1,12 +1,13 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import { useNavigate, NavLink } from 'react-router-dom';
 import './login.css';
 
 export function Login() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <main>
       <header>
         <h1>Mad Libs©</h1>
       </header>
@@ -22,13 +23,13 @@ export function Login() {
           <input type="password" id="password" placeholder="password" />
         </div>
         <br />
-        <button onClick={() => navigate('/createstory')}>Login</button>
-        <button onClick={() => navigate('/createstory')}>Create</button>
+        <Button onClick={() => navigate('/createstory')}>Login</Button>
+        <Button onClick={() => navigate('/createstory')}>Create</Button>
       </section>
       <footer>
         <hr />
-        <a href="https://github.com/nicholasA113/startup">Github</a>
+        <NavLink className='nav-link' to="https://github.com/nicholasA113/startup">Github</NavLink>
       </footer>
-    </>
+    </main>
   );
 }
