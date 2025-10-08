@@ -10,7 +10,7 @@ input[type="text"] {
   background-color: white;
 }
 
-body {
+#write-page {
   background-color: #D5D0C4;
   color: black;
 }
@@ -21,7 +21,7 @@ body {
   text-align: center;
 }
 
-button {
+.buttons {
   background-color: #877C73;
   color: white;
   border: none;
@@ -37,14 +37,14 @@ button {
   justify-content: center;
   background-color: #9CA5B1;
   color: black;
-  padding: 26px;
+  padding: 22px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-#generate-button{
+.generate-button{
   background-color: #9CA5B1;
   color: black;
   padding: 26px;
@@ -55,15 +55,21 @@ button {
 }
 
 #generate {
-  display: block;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  background-color: #9CA5B1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 12px;
 }
 
 #word-type {
     text-align: right;
 }
 
-footer{
+.footer{
   background-color: #44474D;
   text-align: right;
   font-size: 20px;

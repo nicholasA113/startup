@@ -25,11 +25,11 @@ export function CreateStory(){
                 <h2 id="create-story"><b><u>Create Story</u></b></h2>
                 <p>Which story would you like to create from?</p>
                 <div>
-                <Button className="buttons" onClick={() => navigate(<Write />)}>Haunted Mansion</Button><br />
-                <Button className="buttons" onClick={() => navigate(<Write />)}>Grocery Shopping</Button><br />
-                <Button className="buttons" onClick={() => navigate(<Write />)}>Ordering Pizza</Button><br />
-                <Button className="buttons" onClick={() => navigate(<Write />)}>New Sports Class</Button><br />
-                <Button className="buttons" onClick={() => navigate(<Write />)}>First Day on the Job</Button><br />
+                <Button className="buttons" onClick={() => navigate('/write')}>Haunted Mansion</Button><br />
+                <Button className="buttons" onClick={() => navigate('/write')}>Grocery Shopping</Button><br />
+                <Button className="buttons" onClick={() => navigate('/write')}>Ordering Pizza</Button><br />
+                <Button className="buttons" onClick={() => navigate('/write')}>New Sports Class</Button><br />
+                <Button className="buttons" onClick={() => navigate('/write')}>First Day on the Job</Button><br />
                 </div>
             </section>
             <footer className="footer">
