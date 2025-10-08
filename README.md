@@ -97,9 +97,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-**Bundled using Vite** - Used vite to bundle the project, porting all old html and css files to a new format via jsx files.  
-**Components** - Slightly modified and updated css to conform to each page serving as a path for a BrowserRouter  
-**Router** - All html were converted to jsx files. Each page served as a route path on my app.jsx file.  
+**Bundled using Vite** - Used vite to bundle the project, porting all old html to new jsx files, still using previous elements from css files.    
+**Components** - Slightly modified and updated css elements such as NavLinks and Bootstrap buttons to conform to each new jsx page serving as a path for a BrowserRouter  
+**Router** - All html files were converted to jsx files. Each page serving now as a route path on my app.jsx file, allows for application to transition from page to page seamlessly without a refresh to a new html page.  
 
 ## 🚀 React part 2: Reactivity deliverable
 
