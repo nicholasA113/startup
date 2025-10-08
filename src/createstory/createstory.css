@@ -39,6 +39,7 @@ header, section{
 #main-section{
   background-color: #9CA5B1;
   color: black;
+  padding: 18px;
 }
 
 .footer{

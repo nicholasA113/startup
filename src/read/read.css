@@ -5,7 +5,7 @@
   border-radius: 5px;
 }
 
-body {
+#read-page {
   background-color: #D5D0C4;
   color: black;
 }
@@ -42,14 +42,14 @@ body {
     display: inline-block;
 }
 
-section {
+#story {
   background-color: #9CA5B1;
   color: black;
   padding: 26px;
   text-align: center;
 }
 
-button {
+.buttons {
   background-color: #877C73;
   color: white;
   border: none;
@@ -60,7 +60,7 @@ button {
   margin: 5px;
 }
 
-footer{
+.footer{
   background-color: #44474D;
   text-align: right;
   font-size: 20px;
