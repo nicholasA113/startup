@@ -9,15 +9,15 @@ header, section{
   text-align: center;
 }
 
-h1 {
+#title {
   font-size: 56px;
 }
 
-img {
+#image {
   border: 5px solid black;
 }
 
-body {
+#main {
   background-color: #D5D0C4;
   color: black;
 }
@@ -27,7 +27,7 @@ body {
   color: black;
 }
 
-h2 {
+#create-story {
   text-align: center;
   font-size: 22px;
 }
@@ -36,18 +36,18 @@ h2 {
   font-size: 40px;
 }
 
-section{
+#main-section{
   background-color: #9CA5B1;
   color: black;
 }
 
-footer{
+.footer{
   background-color: #44474D;
   text-align: right;
   font-size: 20px;
 }
 
-button {
+.buttons {
   background-color: #877C73;
   color: white;
   border: none;

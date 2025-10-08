@@ -15,16 +15,16 @@ body {
   color: black;
 }
 
-header {
+#title-header {
   background-color: #3D5E6B;
 }
 
-h1 {
+#mad-libs-tile {
   font-size: 56px;
   text-align: center;
 }
 
-section {
+#welcome-section {
   background-color: #9CA5B1;
   color: black;
   text-align: center;
@@ -39,7 +39,7 @@ section {
     font-size: 20px;
 }
 
-button {
+.buttons {
   background-color: #877C73;
   color: white;
   border: none;
@@ -50,7 +50,7 @@ button {
   margin: 5px;
 }
 
-footer{
+.footer{
   background-color: #44474D;
   text-align: right;
   font-size: 20px;

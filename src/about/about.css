@@ -5,21 +5,21 @@
   border-radius: 5px;
 }
 
-body {
+#main {
   background-color: #D5D0C4;
   color: black;
 }
 
-div {
+#page-guidance {
     background-color: #3D5E6B;
     text-align: center;
 }
 
-header {
+#about-title {
     font-size: 22px;
 }
 
-button {
+.buttons {
   background-color: #877C73;
   color: white;
   border: none;
@@ -30,14 +30,14 @@ button {
   margin: 5px;
 }
 
-section {
+#about-section {
   background-color: #9CA5B1;
   color: black;
   text-align: center;
   padding: 26px;
 }
 
-footer{
+.footer{
   background-color: #44474D;
   text-align: right;
   font-size: 20px;
