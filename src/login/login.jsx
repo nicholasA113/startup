@@ -43,8 +43,8 @@ export function Login() {
           <input type="password" id="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/>
         </div>
         <br />
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Login</Button>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Create</Button>
+        <Button className="buttons" onClick={handleLogin}>Login</Button>
+        <Button className="buttons" onClick={handleCreate}>Create</Button>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </section>
