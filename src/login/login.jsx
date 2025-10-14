@@ -31,6 +31,7 @@ export function Login() {
       <header id="title-header">
         <h1 id="mad-libs-title">Mad Libs©</h1>
       </header>
+      
       <section id="welcome-section">
         <div id="welcome">
           <p><i>Welcome to Mad Libs©! Please login or signup to get started.</i></p>
@@ -48,6 +49,7 @@ export function Login() {
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </section>
+
       <footer className="footer">
         <hr />
         <NavLink className='nav-link' to="https://github.com/nicholasA113/startup">Github</NavLink>
