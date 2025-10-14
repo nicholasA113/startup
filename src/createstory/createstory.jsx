@@ -5,13 +5,14 @@ import './createstory.css';
 
 export function CreateStory(){
     const navigate = useNavigate();
+    const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
     return (
         <main id="main">
             <header id="page-guidance">
                 <h1 id="title">Mad Libs©</h1>
                 <img id="image" src="https://live.staticflickr.com/3860/14754157821_75127554ac_z.jpg" height="150" />
-                <p>Welcome, [username]!</p>
+                <p>Welcome, {storedTempUser.username}!</p>
                 <aside>
                 <p><i>"[3rd-party API implementation of a random quote generator]"</i></p>
                 </aside>
@@ -21,6 +22,7 @@ export function CreateStory(){
                 <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
                 <hr />
             </header>
+
             <section id="main-section">
                 <h2 id="create-story"><b><u>Create Story</u></b></h2>
                 <p>Which story would you like to create from?</p>
@@ -37,6 +39,7 @@ export function CreateStory(){
                     navigate('/write')}>First Day on the Job</Button><br />
                 </div>
             </section>
+            
             <footer className="footer">
                 <hr />
                 <NavLink className='nav-link' to="https://github.com/nicholasA113/startup">Github</NavLink>
