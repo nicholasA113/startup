@@ -31,7 +31,7 @@ export function Login() {
       <header id="title-header">
         <h1 id="mad-libs-title">Mad Libs©</h1>
       </header>
-      
+
       <section id="welcome-section">
         <div id="welcome">
           <p><i>Welcome to Mad Libs©! Please login or signup to get started.</i></p>
@@ -47,7 +47,7 @@ export function Login() {
         <Button className="buttons" onClick={handleLogin}>Login</Button>
         <Button className="buttons" onClick={handleCreate}>Create</Button>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: 'red' }}><b>{error}</b></p>}
       </section>
 
       <footer className="footer">
