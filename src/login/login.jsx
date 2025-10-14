@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { useNavigate, NavLink } from 'react-router-dom';
 import './login.css';
@@ -22,7 +22,7 @@ export function Login() {
 
   const handleCreate = () => {
     const tempUser = {username, password};
-    localStorage.setItem('tempUser', JSON.stringify(tempUser);
+    localStorage.setItem('tempUser', JSON.stringify(tempUser));
     navigate('/createstory');
   }
 
@@ -40,11 +40,13 @@ export function Login() {
           <input type="text" id="username" placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
           <br />
           <label htmlFor="password">Password: </label>
-          <input type="password" id="password" placeholder="password" onChange={(e) => setPassword(e.target.value)/>
+          <input type="password" id="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/>
         </div>
         <br />
         <Button className="buttons" onClick={() => navigate('/createstory')}>Login</Button>
         <Button className="buttons" onClick={() => navigate('/createstory')}>Create</Button>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </section>
       <footer className="footer">
         <hr />
