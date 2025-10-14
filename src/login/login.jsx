@@ -5,6 +5,26 @@ import './login.css';
 
 export function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = () => {
+    const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+
+    if (storedTempUser && username==storedTempUser.username && password==storedTempUser.password){
+      navigate('/createstory');
+    }
+    else {
+      setError('User not found. Please click create or check your login information.');
+    }
+  }
+
+  const handleCreate = () => {
+    const tempUser = {username, password};
+    localStorage.setItem('tempUser', JSON.stringify(tempUser);
+    navigate('/createstory');
+  }
 
   return (
     <main>
@@ -17,10 +37,10 @@ export function Login() {
         </div>
         <div id="user-password">
           <label htmlFor="username">Username: </label>
-          <input type="text" id="username" placeholder="username" />
+          <input type="text" id="username" placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
           <br />
           <label htmlFor="password">Password: </label>
-          <input type="password" id="password" placeholder="password" />
+          <input type="password" id="password" placeholder="password" onChange={(e) => setPassword(e.target.value)/>
         </div>
         <br />
         <Button className="buttons" onClick={() => navigate('/createstory')}>Login</Button>
