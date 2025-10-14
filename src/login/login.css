@@ -5,7 +5,8 @@
   border-radius: 5px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   color: black;
   background-color: white;
 }
