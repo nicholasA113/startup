@@ -47,7 +47,11 @@ export function Login() {
         <Button className="buttons" onClick={handleLogin}>Login</Button>
         <Button className="buttons" onClick={handleCreate}>Create</Button>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && (
+          <p style={{ color: 'white', backgroundColor: '#d32f2f', padding: '8px', borderRadius: '4px' }}>
+            {error}
+          </p>
+        )}
       </section>
 
       <footer className="footer">
