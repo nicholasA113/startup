@@ -5,6 +5,11 @@ import './read.css';
 
 export function Read(){
     const navigate = useNavigate();
+    const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+
+    const selectedStory = localStorage.getItem('selectedStory');
+    const filledWords = JSON.parse(localStorage.getItem('filledWords'));
+    const story = storyData[selectedStory].story;
 
     return (
         <main id="read-page">
@@ -18,8 +23,8 @@ export function Read(){
                 <hr />
             </header>
             <section id="story">
-                <header id="storyTitle"><b><u>Story Title</u></b></header>
-                <p id="username"><i>by [username]</i></p>
+                <header id="storyTitle"><b><u>{storyData[selectedStory].title}</u></b></header>
+                <p id="username"><i>by {storedTempUser.username}</i></p>
                 <p id="storyContent">Lorum Ipsum Dolor</p>
                 <br />
                 <div id="next-step-buttons">
