@@ -77,8 +77,8 @@ export function Write(){
         };
         
         const handleGenerate = () => {
-        localStorage.setItem('filledWords', JSON.stringify(inputs));
-        navigate('/read');
+            localStorage.setItem('filledWords', JSON.stringify(inputs));
+            navigate('/read');
         };
 
     return(
