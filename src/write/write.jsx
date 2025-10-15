@@ -71,13 +71,15 @@ export function Write(){
         const [inputs, setInputs] = useState(Array(story.words.length).fill(''));
         
         const handleChange = (i, value) => {
-        const copy = [...inputs];
-        copy[i] = value;
-        setInputs(copy);
+            const copy = [...inputs];
+            copy[i] = value;
+            setInputs(copy);
         };
         
         const handleGenerate = () => {
             localStorage.setItem('filledWords', JSON.stringify(inputs));
+            localStorage.setItem('storyTemplate', story.story);
+            localStorage.setItem('storyTitle', story.title);
             navigate('/read');
         };
 

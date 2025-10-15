@@ -7,9 +7,11 @@ export function Read(){
     const navigate = useNavigate();
     const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
-    const selectedStory = localStorage.getItem('selectedStory');
+    const storyTemplate = localStorage.getItem('storyTemplate');
     const filledWords = JSON.parse(localStorage.getItem('filledWords'));
-    const story = storyData[selectedStory].story;
+    const storyTitle = localStorage.getItem('storyTitle');
+
+    const fullStory = storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1]);
 
     return (
         <main id="read-page">
@@ -23,9 +25,9 @@ export function Read(){
                 <hr />
             </header>
             <section id="story">
-                <header id="storyTitle"><b><u>{storyData[selectedStory].title}</u></b></header>
+                <header id="storyTitle"><b><u>{storyTitle}</u></b></header>
                 <p id="username"><i>by {storedTempUser.username}</i></p>
-                <p id="storyContent">Lorum Ipsum Dolor</p>
+                <p id="storyContent">{fullStory}</p>
                 <br />
                 <div id="next-step-buttons">
                     <Button className="buttons" onClick={() => navigate('/mystories')}>Save Story</Button>
