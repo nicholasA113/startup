@@ -5,6 +5,34 @@ import './write.css';
 
 export function Write(){
     const navigate = useNavigate();
+    const selectedStory = JSON.parse(localStorage.getItem('selectedStory'));
+
+    handleWordList = () => {
+        const story = localStorage.getItem('selectedStory');
+
+        const storyData = {
+            'haunted-mansion': {
+                title: 'Haunted Mansion',
+                words = [],
+            },
+            'grocery-shopping' : {
+                title: 'Grocery Shopping',
+                words = [],
+            },
+            'ordering-pizza' : {
+                title: 'Ordering Pizza',
+                words = [],
+            },
+            'new-sports-class' : {
+                title: 'New Sports Class',
+                words = [],
+            },
+            'first-day-on-job' : {
+                title : 'First Day on the Job',
+                words = [],
+            },
+        };
+    }
 
     return(
         <main id="write-page">
@@ -17,22 +45,14 @@ export function Write(){
                 <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
                 <hr />
             </header>
+
             <section id="text-fields">
-                <table>
-                    <tr>
-                        <td id="word-type"><label htmlFor="noun1">Noun: </label></td>
-                        <td><input type="text" id="noun1" name="varNoun1"/></td>
-                    </tr>
-                    <tr>
-                        <td id="word-type"><label htmlFor="adj1">Adjective: </label></td>
-                        <td><input type="text" id="adj1" name="varAdj1"/></td>
-                    </tr>
-                    <tr>
-                        <td id="word-type"><label htmlFor="verb1">Verb: </label></td>
-                        <td><input type="text" id="verb1" name="varVerb1"/></td>
-                    </tr>
-                </table>
+                <ul>
+                    {story.words.map((word, i) =>
+                    <li key={i}>{word}</li>
+                )}</ul>
             </section>
+
             <section id="generate">
                 <Button className="buttons" onClick={() => navigate('/read')}>Generate Story</Button>
                 <br />
