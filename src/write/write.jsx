@@ -97,11 +97,11 @@ export function Write(){
             <ul>
               {story.words.map((word, i) => (
                 <li key={i}>
-                  {word}: <input 
+                  <span>{word}: </span>
+                <input 
                     type="text" 
                     value={inputs[i]} 
-                    onChange={(e) => handleChange(i, e.target.value)} 
-                  /></li>))}
+                    onChange={(e) => handleChange(i, e.target.value)} /></li>))}
             </ul>
           </section>
 
