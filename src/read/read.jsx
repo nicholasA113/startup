@@ -65,7 +65,7 @@ export function Read() {
                         <>
                             <label htmlFor="checkbox1">Post to Community Board?</label>
                             <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1" />
-                            <p> | </p>
+                            <span> | </span>
                         </>
                     )}
                     <label htmlFor="checkbox2">Save Story to Favorites?</label>
