@@ -27,8 +27,8 @@ export function Story() {
         <p id="username"><i>by {selectedStory.author}</i></p>
         <p id="storyContent">{selectedStory.content}</p>
 
-        <div id="checkbox-area" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          {storedTempUser.username === selectedStory.author && (
+        <div id="checkbox-area">
+          {storedTempUser?.username === selectedStory.author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1" />
