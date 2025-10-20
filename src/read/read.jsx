@@ -16,7 +16,7 @@ export function Read() {
         ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
         : selectedReadStory?.content;
 
-    const author = selectedReadStory?.author || storedTempUser.username;
+    const author = storedTempUser?.username;
     const title = selectedReadStory?.title || storyTitle;
 
     const handleSaveStory = () => {
