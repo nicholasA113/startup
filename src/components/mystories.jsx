@@ -43,6 +43,17 @@ export function MyStories() {
         ) : (
           <p>No stories created yet.</p>
         )}
+
+        <br />
+        <p><u>Favorited Stories</u></p>
+
+        <div
+          className="story-card"
+          onClick={() => navigate('/story')}
+        >
+          <h3>New Sports Class</h3>
+          <p><i>by TheAmazingSpider-man</i></p>
+        </div>
       </section>
 
       <footer className="footer">
