@@ -21,9 +21,22 @@ export function MyStories(){
             <section id="sections-page">
                 <header id="page-title"><b><u>My Stories</u></b></header>
                 <p><u>{storedTempUser.username} Stories</u></p>
-                <Button className="story-card" onClick={() => navigate('/story')}>The Haunted Mansion</Button>
-                <Button className="story-card" onClick={() => navigate('/story')}>Grocery Shopping</Button>
+                
+                savedStories.map((story, i) => (
+                    <div key={i} className="story-card">
+                      <h3>{story.title}</h3>
+                      <p><i>by {story.author}</i></p>
+                      <Button 
+                        className="buttons"
+                        onClick={() => {
+                          localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                          navigate('/story');
+                        }}>
+                      </Button>
+                    </div>
+                )
                 <br />
+                
                 <p><u>Favorited Stories</u></p>
                 <Button className="story-card" onClick={() => navigate('/story')}>
                     New Sports Class
