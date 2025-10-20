@@ -13,7 +13,6 @@ export function Read() {
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
   const storyTitle = localStorage.getItem('storyTitle');
 
-  // ✅ Priority logic for story content & title
   const fullStory =
     selectedReadStory?.content ||
     (storyTemplate && filledWords
@@ -24,7 +23,6 @@ export function Read() {
   const author =
     selectedReadStory?.author || storedTempUser?.username || 'Anonymous';
 
-  // ✅ Save story handler
   const handleSaveStory = () => {
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     const newStory = {
@@ -37,7 +35,6 @@ export function Read() {
     navigate('/mystories');
   };
 
-  // ✅ Create another story (save + go to new)
   const handleCreateAnother = () => {
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     const newStory = {
@@ -81,17 +78,8 @@ export function Read() {
         </p>
         <p id="storyContent">{fullStory}</p>
 
-        {/* ✅ One-line checkbox section */}
         <div
           id="checkbox-area"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            flexWrap: 'wrap',
-            marginTop: '20px',
-          }}
         >
           {storedTempUser?.username === author && (
             <>
