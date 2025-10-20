@@ -12,16 +12,6 @@ export function MyStories() {
     story => story.author === storedTempUser.username
   );
 
-  const handleOpenStory = (story) => {
-    localStorage.removeItem('storyTemplate');
-    localStorage.removeItem('storyTitle');
-    localStorage.removeItem('filledWords');
-      
-    localStorage.setItem('selectedReadStory', JSON.stringify(story));
-
-    navigate('/story');
-  };
-
   return (
     <main id="main-page">
       <header id="page-guidance">
@@ -43,7 +33,13 @@ export function MyStories() {
             <div
               key={i}
               className="story-card"
-              onClick={() => handleOpenStory(story)}
+              onClick={() => {
+                localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                localStorage.removeItem('storyTemplate');
+                localStorage.removeItem('storyTitle');
+                localStorage.removeItem('filledWords');
+                navigate('/story');
+              }}
             >
               <h3>{story.title}</h3>
             </div>
