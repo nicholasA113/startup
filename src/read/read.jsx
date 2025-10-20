@@ -13,6 +13,34 @@ export function Read(){
 
     const fullStory = storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1]);
 
+    const handleSaveStory = () => {
+        const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
+
+        const newStory = {
+            title: storyTitle,
+            content: fullStory,
+            author: username,
+        };
+        
+        savedStories.push(newStory);
+        localStorage.setItem('savedStories', JSON.stringify(savedStories));
+        navigate('/mystories');
+    }
+
+    const handleCreateAnother = () => {
+        const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
+
+        const newStory = {
+            title: storyTitle,
+            content: fullStory,
+            author: username,
+        };
+        
+        savedStories.push(newStory);
+        localStorage.setItem('savedStories', JSON.stringify(savedStories));
+        navigate('/createstory');
+    }
+
     return (
         <main id="read-page">
             <header id="page-guidance">
@@ -24,6 +52,7 @@ export function Read(){
                 <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
                 <hr />
             </header>
+            
             <section id="story">
                 <header id="storyTitle"><b><u>{storyTitle}</u></b></header>
                 <p id="username"><i>by {storedTempUser.username}</i></p>
@@ -37,11 +66,12 @@ export function Read(){
                 </div>
                 <br />
                 <div id="next-step-buttons">
-                    <Button className="buttons" onClick={() => navigate('/mystories')}>Save Story</Button>
+                    <Button className="buttons" onClick={handleSaveStory}>Save Story</Button>
                     <Button className="buttons" onClick={() => navigate('/createstory')}>Delete Story</Button>
-                    <Button className="buttons" onClick={() => navigate('/createstory')}>Create Another Story</Button>
+                    <Button className="buttons" onClick={handleCreateAnother}>Create Another Story</Button>
                 </div>
             </section>
+            
             <footer className="footer">
                 <hr />
                 <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
