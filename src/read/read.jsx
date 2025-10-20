@@ -19,7 +19,7 @@ export function Read(){
         const newStory = {
             title: storyTitle,
             content: fullStory,
-            author: username,
+            author: storedTempUser.username,
         };
         
         savedStories.push(newStory);
@@ -33,7 +33,7 @@ export function Read(){
         const newStory = {
             title: storyTitle,
             content: fullStory,
-            author: username,
+            author: storedTempUser.username,
         };
         
         savedStories.push(newStory);
@@ -64,6 +64,7 @@ export function Read(){
                     <label for="checkbox2">  |  Save Story to Favorites?</label>
                     <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2"/>
                 </div>
+                <br />
                 <br />
                 <div id="next-step-buttons">
                     <Button className="buttons" onClick={handleSaveStory}>Save Story</Button>
