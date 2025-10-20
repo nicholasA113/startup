@@ -36,6 +36,9 @@
 }
 
 #checkbox-area {
+    display: 'flex';
+    align-items: 'center';
+    justify-content: 'center';
     background-color: #3D5E6B;
     padding: 10px 15px;
     border-radius: 5px;

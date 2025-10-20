@@ -56,7 +56,7 @@ export function Read() {
             </header>
 
             <section id="story">
-                <header id="storyTitle"><b><u>{title}</u></b></header>
+                <header id="storyTitle"><b><u>{storyTitle}</u></b></header>
                 <p id="username"><i>by {author}</i></p>
                 <p id="storyContent">{fullStory}</p>
                 <br />
