@@ -29,7 +29,7 @@ export function Read(){
                 <p id="username"><i>by {storedTempUser.username}</i></p>
                 <p id="storyContent">{fullStory}</p>
                 <br />
-                <div id="checkbox-area-read">
+                <div id="checkbox-area">
                     <label for="checkbox1">Post to Community Board?</label>
                     <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
                     <label for="checkbox2">  |  Save Story to Favorites?</label>
