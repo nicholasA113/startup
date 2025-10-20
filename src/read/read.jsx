@@ -17,7 +17,7 @@ export function Read(){
         const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
 
         const newStory = {
-            title: storyTitle,
+            title,
             content: fullStory,
             author: storedTempUser.username,
         };
@@ -31,7 +31,7 @@ export function Read(){
         const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
 
         const newStory = {
-            title: storyTitle,
+            title,
             content: fullStory,
             author: storedTempUser.username,
         };
@@ -59,7 +59,7 @@ export function Read(){
                 <p id="storyContent">{fullStory}</p>
                 <br />
                 <div id="checkbox-area">
-                    {storedTempUser.username === storyTemplate.author && (
+                    {storedTempUser.username === author && (
                         <>
                             <label for="checkbox1">Post to Community Board?</label>
                             <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
