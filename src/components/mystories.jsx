@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 export function MyStories(){
     const navigate = useNavigate();
     const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
 
     return (
         <main id="main-page">
@@ -22,7 +23,7 @@ export function MyStories(){
                 <header id="page-title"><b><u>My Stories</u></b></header>
                 <p><u>{storedTempUser.username} Stories</u></p>
                 
-                savedStories.map((story, i) => (
+                {savedStories.map((story, i) => (
                     <div key={i} className="story-card">
                       <h3>{story.title}</h3>
                       <p><i>by {story.author}</i></p>
@@ -34,7 +35,7 @@ export function MyStories(){
                         }}>
                       </Button>
                     </div>
-                )
+                )}
                 <br />
                 
                 <p><u>Favorited Stories</u></p>
