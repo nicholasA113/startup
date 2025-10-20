@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 export function MyStories(){
     const navigate = useNavigate();
+    const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
     return (
         <main id="main-page">
@@ -19,7 +20,7 @@ export function MyStories(){
             </header>
             <section id="sections-page">
                 <header id="page-title"><b><u>My Stories</u></b></header>
-                <p><u>[Username's] Stories</u></p>
+                <p><u>{storedTempUser.username} Stories</u></p>
                 <Button className="story-card" onClick={() => navigate('/story')}>The Haunted Mansion</Button>
                 <Button className="story-card" onClick={() => navigate('/story')}>Grocery Shopping</Button>
                 <br />
