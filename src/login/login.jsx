@@ -9,16 +9,16 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
+const handleLogin = () => {
     const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
-    if (storedTempUser && username==storedTempUser.username && password==storedTempUser.password){
+    if (storedTempUser && username === storedTempUser.username && password === storedTempUser.password) {
+      localStorage.setItem('tempUser', JSON.stringify({ username, password }));
       navigate('/createstory');
-    }
-    else {
+    } else {
       setError('User not found. Please click create or check your login information.');
     }
-  }
+};
 
   const handleCreate = () => {
     const tempUser = {username, password};
