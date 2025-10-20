@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import '../read/read.css';
 
@@ -13,7 +13,13 @@ export function Story() {
   return (
     <main id="read-page">
       <header id="page-guidance">
+        <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
+        <hr />
       </header>
 
       <section id="story">
@@ -21,7 +27,7 @@ export function Story() {
         <p id="username"><i>by {selectedStory.author}</i></p>
         <p id="storyContent">{selectedStory.content}</p>
 
-        <div id="checkbox-area">
+        <div id="checkbox-area" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           {storedTempUser.username === selectedStory.author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
@@ -33,6 +39,11 @@ export function Story() {
           <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
         </div>
       </section>
+
+      <footer className="footer">
+        <hr />
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
+      </footer>
     </main>
   );
 }
