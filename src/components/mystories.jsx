@@ -24,22 +24,20 @@ export function MyStories(){
                 <p><u>{storedTempUser.username} Stories</u></p>
                 
                 {savedStories.length > 0 ? (
-                  savedStories.map((story, i) => (
-                    <div key={i} className="story-card">
-                      <h3>{story.title}</h3>
-                      <p><i>by {story.author}</i></p>
-                      <Button
-                        className="buttons"
+                    savedStories.map((story, i) => (
+                      <div
+                        key={i}
+                        className="story-card"
                         onClick={() => {
                           localStorage.setItem('selectedReadStory', JSON.stringify(story));
                           navigate('/story');
                         }}
                       >
-                        Read Story
-                      </Button>
-                    </div>
-                  ))
-                ) : (
+                        <h3>{story.title}</h3>
+                        <p><i>by {story.author}</i></p>
+                      </div>
+                    ))}
+                (
                   <p>No stories created.</p>
                 )}
         
