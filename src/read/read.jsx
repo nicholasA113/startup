@@ -7,56 +7,135 @@ export function Read() {
   const navigate = useNavigate();
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
+  // pull from localStorage
+  const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
-  const filledWords = JSON.parse(localStorage.getItem('filledWords') || '[]');
+  const filledWords = JSON.parse(localStorage.getItem('filledWords'));
   const storyTitle = localStorage.getItem('storyTitle');
 
-  const fullStory = storyTemplate
-    ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
-    : '';
+  // ✅ Priority logic for story content & title
+  const fullStory =
+    selectedReadStory?.content ||
+    (storyTemplate && filledWords
+      ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
+      : '');
 
+  const title = selectedReadStory?.title || storyTitle || 'Untitled Story';
+  const author =
+    selectedReadStory?.author || storedTempUser?.username || 'Anonymous';
+
+  // ✅ Save story handler
   const handleSaveStory = () => {
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     const newStory = {
-      title: storyTitle,
+      title,
       content: fullStory,
       author: storedTempUser.username,
     };
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
-    // Save as selected story for reading
-    localStorage.setItem('selectedReadStory', JSON.stringify(newStory));
     navigate('/mystories');
+  };
+
+  // ✅ Create another story (save + go to new)
+  const handleCreateAnother = () => {
+    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
+    const newStory = {
+      title,
+      content: fullStory,
+      author: storedTempUser.username,
+    };
+    savedStories.push(newStory);
+    localStorage.setItem('savedStories', JSON.stringify(savedStories));
+    navigate('/createstory');
   };
 
   return (
     <main id="read-page">
       <header id="page-guidance">
+        <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>
+          Create Story
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>
+          My Stories
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>
+          Community Board
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>
+          About
+        </Button>
+        <hr />
       </header>
 
       <section id="story">
-        <header id="storyTitle"><b><u>{storyTitle}</u></b></header>
-        <p id="username"><i>by {storedTempUser.username}</i></p>
+        <header id="storyTitle">
+          <b>
+            <u>{title}</u>
+          </b>
+        </header>
+        <p id="username">
+          <i>by {author}</i>
+        </p>
         <p id="storyContent">{fullStory}</p>
 
-        <div id="checkbox-area">
-          {storedTempUser?.username === selectedStory.author && (
+        {/* ✅ One-line checkbox section */}
+        <div
+          id="checkbox-area"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            flexWrap: 'wrap',
+            marginTop: '20px',
+          }}
+        >
+          {storedTempUser?.username === author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
-              <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1" />
-              <span>|</span>
+              <input
+                type="checkbox"
+                id="checkbox1"
+                name="varCheckbox1"
+                value="checkbox1"
+              />
+              <span> | </span>
             </>
           )}
           <label htmlFor="checkbox2">Save Story to Favorites?</label>
-          <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
+          <input
+            type="checkbox"
+            id="checkbox2"
+            name="varCheckbox2"
+            value="checkbox2"
+          />
         </div>
 
         <div id="next-step-buttons">
-          <Button className="buttons" onClick={handleSaveStory}>Save Story</Button>
-          <Button className="buttons" onClick={() => navigate('/createstory')}>Delete Story</Button>
+          <Button className="buttons" onClick={handleSaveStory}>
+            Save Story
+          </Button>
+          <Button className="buttons" onClick={() => navigate('/createstory')}>
+            Delete Story
+          </Button>
+          <Button className="buttons" onClick={handleCreateAnother}>
+            Create Another Story
+          </Button>
         </div>
       </section>
+
+      <footer className="footer">
+        <hr />
+        <NavLink
+          className="nav-link"
+          to="https://github.com/nicholasA113/startup"
+        >
+          Github
+        </NavLink>
+      </footer>
     </main>
   );
 }
