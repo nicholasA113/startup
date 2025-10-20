@@ -77,9 +77,9 @@ export function Login() {
               backgroundColor: '#d32f2f',
               padding: '8px',
               borderRadius: '4px',
-              marginTop: '10px auto',
+              margin: '10px auto',
               maxWidth: '400px',
-              textAlign: center,
+              textAlign: 'center',
             }}
           >
             {error}
