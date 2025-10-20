@@ -59,9 +59,13 @@ export function Read(){
                 <p id="storyContent">{fullStory}</p>
                 <br />
                 <div id="checkbox-area">
-                    <label for="checkbox1">Post to Community Board?</label>
-                    <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
-                    <p>  |  </p>
+                    {storedTempUser.username === storyTemplate.author && (
+                        <>
+                            <label for="checkbox1">Post to Community Board?</label>
+                            <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1"/>
+                            <p>  |  </p>
+                        </>
+                    )}
                     <label for="checkbox2">Save Story to Favorites?</label>
                     <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2"/>
                 </div>
