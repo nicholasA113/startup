@@ -17,7 +17,7 @@ export function Read() {
         : selectedReadStory?.content;
 
     const author = storedTempUser?.username;
-    const title = selectedReadStory?.title || storyTitle;
+    const title = selectedReadStory?.title;
 
     const handleSaveStory = () => {
         const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
