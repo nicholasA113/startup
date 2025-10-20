@@ -8,6 +8,10 @@ export function MyStories() {
     const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
 
+    const userStories = savedStories.filter(
+      story => story.author === storedTempUser.username
+    );
+
     return (<main id="main-page">
         <header id="page-guidance">
           <br />
@@ -23,8 +27,8 @@ export function MyStories() {
         <header id="page-title"><b><u>My Stories</u></b></header>
         <p><u>{storedTempUser.username}'s Stories</u></p>
 
-        {savedStories.length > 0 ? (
-          savedStories.map((story, i) => (
+        {userStories.length > 0 ? (
+          userStories.map((story, i) => (
             <div
               key={i}
               className="story-card"
