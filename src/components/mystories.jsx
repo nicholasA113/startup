@@ -37,7 +37,6 @@ export function MyStories() {
               }}
             >
               <h3>{story.title}</h3>
-              <p><i>by {story.author}</i></p>
             </div>
           ))
         ) : (
