@@ -24,33 +24,15 @@ export function Read() {
     };
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
-    localStorage.setItem('selectedReadStory', JSON.stringify(newStory)); // save selected story
-    navigate('/mystories');
-  };
-
-  const handleCreateAnother = () => {
-    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
-    const newStory = {
-      title: storyTitle,
-      content: fullStory,
-      author: storedTempUser.username,
-    };
-    savedStories.push(newStory);
-    localStorage.setItem('savedStories', JSON.stringify(savedStories));
+    // Save as selected story for reading
     localStorage.setItem('selectedReadStory', JSON.stringify(newStory));
-    navigate('/createstory');
+    navigate('/mystories');
   };
 
   return (
     <main id="read-page">
       <header id="page-guidance">
-        <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
-        <hr />
       </header>
 
       <section id="story">
@@ -70,18 +52,11 @@ export function Read() {
           <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
         </div>
 
-        <br />
         <div id="next-step-buttons">
           <Button className="buttons" onClick={handleSaveStory}>Save Story</Button>
           <Button className="buttons" onClick={() => navigate('/createstory')}>Delete Story</Button>
-          <Button className="buttons" onClick={handleCreateAnother}>Create Another Story</Button>
         </div>
       </section>
-
-      <footer className="footer">
-        <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
-      </footer>
     </main>
   );
 }
