@@ -9,22 +9,31 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-const handleLogin = () => {
+  const handleLogin = () => {
     const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
-    if (storedTempUser && username === storedTempUser.username && password === storedTempUser.password) {
+    if (
+      storedTempUser &&
+      username === storedTempUser.username &&
+      password === storedTempUser.password
+    ) {
       localStorage.setItem('tempUser', JSON.stringify({ username, password }));
       navigate('/createstory');
     } else {
-      setError('User not found. Please click create or check your login information.');
+      setError('User not found. Please click Create or check your login information.');
     }
-};
+  };
 
   const handleCreate = () => {
-    const tempUser = {username, password};
-    localStorage.setItem('tempUser', JSON.stringify({username: inputUsername}));
+    if (!username || !password) {
+      setError('Please enter both a username and password to create an account.');
+      return;
+    }
+    const tempUser = { username, password };
+    localStorage.setItem('tempUser', JSON.stringify(tempUser));
+    setError('');
     navigate('/createstory');
-  }
+  };
 
   return (
     <main>
@@ -34,21 +43,44 @@ const handleLogin = () => {
 
       <section id="welcome-section">
         <div id="welcome">
-          <p><i>Welcome to Mad Libs©! Please login or signup to get started.</i></p>
+          <p><i>Welcome to Mad Libs©! Please login or sign up to get started.</i></p>
         </div>
+
         <div id="user-password">
           <label htmlFor="username">Username: </label>
-          <input type="text" id="username" placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
+          <input
+            type="text"
+            id="username"
+            placeholder="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <br />
           <label htmlFor="password">Password: </label>
-          <input type="password" id="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/>
+          <input
+            type="password"
+            id="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
+
         <br />
         <Button className="buttons" onClick={handleLogin}>Login</Button>
         <Button className="buttons" onClick={handleCreate}>Create</Button>
 
         {error && (
-          <p style={{ color: 'white', backgroundColor: '#d32f2f', padding: '8px', borderRadius: '4px' }}>
+          <p
+            style={{
+              color: 'white',
+              backgroundColor: '#d32f2f',
+              padding: '8px',
+              borderRadius: '4px',
+              marginTop: '10px',
+              maxWidth: '400px'
+            }}
+          >
             {error}
           </p>
         )}
@@ -56,7 +88,9 @@ const handleLogin = () => {
 
       <footer className="footer">
         <hr />
-        <NavLink className='nav-link' to="https://github.com/nicholasA113/startup">Github</NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
+          Github
+        </NavLink>
       </footer>
     </main>
   );
