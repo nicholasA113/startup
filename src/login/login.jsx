@@ -22,7 +22,7 @@ export function Login() {
 
   const handleCreate = () => {
     const tempUser = {username, password};
-    localStorage.setItem('tempUser', JSON.stringify(tempUser));
+    localStorage.setItem('tempUser', JSON.stringify({username: inputUsername}));
     navigate('/createstory');
   }
 
