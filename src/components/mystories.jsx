@@ -1,33 +1,23 @@
 import React from 'react';
-import '../communityboard/communityboard.css';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import '../communityboard/communityboard.css';
 
 export function MyStories() {
   const navigate = useNavigate();
-  const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+  const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
   const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
 
-  const userStories = savedStories.filter(
-    story => story.author === storedTempUser.username
-  );
+  const userStories = savedStories.filter(story => story.author === storedTempUser.username);
 
   return (
     <main id="main-page">
       <header id="page-guidance">
-        <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
-        <hr />
       </header>
 
       <section id="sections-page">
         <header id="page-title"><b><u>My Stories</u></b></header>
-        <p><u>{storedTempUser.username}'s Stories</u></p>
-
         {userStories.length > 0 ? (
           userStories.map((story, i) => (
             <div
@@ -35,9 +25,6 @@ export function MyStories() {
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
-                localStorage.removeItem('storyTemplate');
-                localStorage.removeItem('storyTitle');
-                localStorage.removeItem('filledWords');
                 navigate('/story');
               }}
             >
@@ -45,28 +32,9 @@ export function MyStories() {
             </div>
           ))
         ) : (
-          <p>No stories created yet.</p>
+          <p>No stories yet.</p>
         )}
-
-        <br />
-        <p><u>Favorited Stories</u></p>
-
-        <div
-          className="story-card"
-          onClick={() => navigate('/story')}
-        >
-          <h3>New Sports Class</h3>
-          <p><i>by TheAmazingSpider-man</i></p>
-        </div>
       </section>
-
-      <footer className="footer">
-        <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
-          Github
-        </NavLink>
-      </footer>
     </main>
   );
 }
-
