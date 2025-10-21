@@ -84,7 +84,7 @@ export function Read() {
           <label htmlFor="checkbox2">Save Story to Favorites?</label>
           <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
         </div>
-
+        <br />
         <div id="next-step-buttons">
           <Button className="buttons" onClick={handleSaveStory}>
             Save Story
