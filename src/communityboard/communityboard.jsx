@@ -32,7 +32,7 @@ export function CommunityBoard(){
                 <p style={{color: 'white', textAlign: 'center'}}>No stories added to community board yet.</p>)
                 : (
                     communityBoardStories.map((story, index) => (
-                        <Button key={index} className="story-card"
+                        <Button key={story.content} className="story-card"
                         onClick={() => {
                             localStorage.setItem('selectedReadStory', JSON.stringify(story));
                             navigate('/story');
