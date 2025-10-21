@@ -12,30 +12,22 @@ export function Story() {
 
   if (!selectedStory) return <p>No story selected</p>;
 
-  useEffect (() => {
+  useEffect(() => {
     const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-    const exists = communityBoardStories.some(
-      story => story.content === selectedStory.content
-    );
-    if (exists !== postToCommunity){
-        setPostToCommunity(exists);
-    }
-  }, [selectedStory, postToCommunity]);
+    const exists = communityBoardStories.some(story => story.content === selectedStory.content);
+    setPostToCommunity(exists);
+  }, [selectedStory]); // only depends on selectedStory
 
-  useEffect (() => {
+  useEffect(() => {
     let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
 
     if (postToCommunity) {
-      const exists = communityBoardStories.some(
-        story => story.content === selectedStory.content
-      );
+      const exists = communityBoardStories.some(story => story.content === selectedStory.content);
       if (!exists) communityBoardStories.push(selectedStory);
+    } else {
+      communityBoardStories = communityBoardStories.filter(story => story.content !== selectedStory.content);
     }
-    else {
-      communityBoardStories = communityBoardStories.filter(
-        story => story.content !== selectedStory.content
-      );
-    }
+
     localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
   }, [postToCommunity, selectedStory]);
 
@@ -60,8 +52,12 @@ export function Story() {
           {storedTempUser?.username === selectedStory.author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
-              <input type="checkbox" id="checkbox1" checked={postToCommunity}
-                  onChange={(e) => setPostToCommunity(e.target.checked)} />
+              <input
+                type="checkbox"
+                id="checkbox1"
+                checked={postToCommunity}
+                onChange={(e) => setPostToCommunity(e.target.checked)}
+              />
               <span> | </span>
             </>
           )}
