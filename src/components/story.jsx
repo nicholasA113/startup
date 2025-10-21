@@ -20,7 +20,7 @@ export function Story() {
     setPostToCommunity(exists);
   }, [selectedStory]);
 
-  const handleSaveToCommunity (() => {
+  useEffect (() => {
     let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
 
     if (postToCommunity) {
