@@ -10,7 +10,6 @@ export function Read() {
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
-  const storyTitle = localStorage.getItem('storyTitle');
 
   const fullStory =
     selectedReadStory?.content ||
@@ -72,7 +71,7 @@ export function Read() {
           </b>
         </header>
         <p id="username">
-          <i>by {selectedreadStory.author}</i>
+          <i>by {selectedReadStory.author}</i>
         </p>
         <p id="storyContent">{fullStory}</p>
 
