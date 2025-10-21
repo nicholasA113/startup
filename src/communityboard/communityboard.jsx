@@ -38,7 +38,8 @@ export function CommunityBoard(){
                             navigate('/story');
                         }}>
                             <b>{story.title}</b>
-                            <b>{story.author}</b>
+                            <br />
+                            <i> by {story.author}</i>
                         </Button>
                     ))
                 )

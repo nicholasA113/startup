@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import '../read/read.css';
@@ -8,7 +8,17 @@ export function Story() {
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
   const selectedStory = JSON.parse(localStorage.getItem('selectedReadStory'));
 
+  const [postToCommunity, setPostToCommunity] = useState(false);
+
   if (!selectedStory) return <p>No story selected</p>;
+
+  const handleSaveToCommunity = () => {
+    if (postToCommunity) {
+      const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
+      communityBoardStories.push(selectedStory);
+      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+    }
+  }
 
   return (
     <main id="read-page">
@@ -31,7 +41,8 @@ export function Story() {
           {storedTempUser?.username === selectedStory.author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
-              <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1" />
+              <input type="checkbox" id="checkbox1" checked={postToCommunity}
+                  onChange={(e) => setPostToCommunity(e.target.checked)} />
               <span> | </span>
             </>
           )}
