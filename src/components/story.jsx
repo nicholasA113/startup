@@ -19,7 +19,6 @@ export function Story() {
     if (exists !== postToCommunity) {
       setPostToCommunity(exists);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
