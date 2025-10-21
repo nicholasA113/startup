@@ -29,7 +29,7 @@ export function CommunityBoard(){
                 <br />
 
             {communityBoardStories.length === 0 ? (
-                <p style={{color: 'white'}}>No stories added to community board yet.</p>)
+                <p style={{color: 'white', textAlign: 'center'}}>No stories added to community board yet.</p>)
                 : (
                     communityBoardStories.map((story, index) => (
                         <Button key={index} className="story-card"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './read.css';
@@ -54,7 +54,7 @@ export function Read() {
       communityBoardStories.push(newStory);
       localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
     }
-    
+
     navigate('/createstory');
   };
 
