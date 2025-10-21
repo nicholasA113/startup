@@ -16,7 +16,7 @@ export function Story() {
     const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
     const exists = communityBoardStories.some(story => story.content === selectedStory.content);
     setPostToCommunity(exists);
-  }, [selectedStory]); // only depends on selectedStory
+  }, [selectedStory]);
 
   useEffect(() => {
     let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
