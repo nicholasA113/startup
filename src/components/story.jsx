@@ -15,8 +15,12 @@ export function Story() {
   useEffect(() => {
     const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
     const exists = communityBoardStories.some(story => story.content === selectedStory.content);
-    setPostToCommunity(exists);
-  }, [selectedStory]);
+
+    if (exists !== postToCommunity) {
+      setPostToCommunity(exists);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
