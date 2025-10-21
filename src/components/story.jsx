@@ -20,8 +20,8 @@ export function Story() {
     setPostToCommunity(exists);
   }, [selectedStory]);
 
-  const handleSaveToCommunity = () => {
-    let ommunityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
+  const handleSaveToCommunity (() => {
+    let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
 
     if (postToCommunity) {
       const exists = communityBoardStories.some(
@@ -35,7 +35,7 @@ export function Story() {
       );
     }
     localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
-  }
+  }, [postToCommunity, selectedStory]);
 
   return (
     <main id="read-page">
