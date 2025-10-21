@@ -74,7 +74,7 @@ export function Read() {
         <p id="storyContent">{fullStory}</p>
 
         <div id="checkbox-area">
-          {storedTempUser?.username === selectedReadStory.author && (
+          {storedTempUser?.username === author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input type="checkbox" id="checkbox1" name="varCheckbox1" value="checkbox1" />
