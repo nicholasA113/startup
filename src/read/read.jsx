@@ -10,15 +10,13 @@ export function Read() {
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
+  const storyTitle = JSON.parse(localStorage.getItem("storyTitle"));
 
-  const fullStory =
-    selectedReadStory?.content ||
-    (storyTemplate && filledWords
-      ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
-      : '');
+  const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
+    : selectedReadStory?.content || '';
 
-  const title = selectedReadStory?.title;
-  const author = selectedReadStory?.author;
+  const title = storyTemplate ? storyTitle : selectedReadStory?.title;
+  const author = storyTemplate ? storedTempUser?.username : selectedReadStory?.author;
 
   const handleSaveStory = () => {
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
