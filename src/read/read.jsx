@@ -12,6 +12,8 @@ export function Read() {
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
   const storyTitle = localStorage.getItem('storyTitle');
 
+  const [postToCommunity, setPostToCommunity] = useState(false);
+
   const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
     : selectedReadStory?.content || '';
 
@@ -19,26 +21,40 @@ export function Read() {
   const author = storyTemplate ? storedTempUser?.username : selectedReadStory?.author;
 
   const handleSaveStory = () => {
-    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     const newStory = {
       title,
       content: fullStory,
       author: storedTempUser.username,
     };
+
+    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
+
+    if (postToCommunity){
+      const communityBoardStories = JSON.parse(localStorage.getItem('communityStories')) || [];
+      communityBoardStories.push(newStory);
+      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+    }
     navigate('/mystories');
   };
 
   const handleCreateAnother = () => {
-    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     const newStory = {
       title,
       content: fullStory,
       author: storedTempUser.username,
     };
+    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
+
+    if (postToCommunity){
+      const communityBoardStories = JSON.parse(localStorage.getItem('communityStories')) || [];
+      communityBoardStories.push(newStory);
+      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+    }
+    
     navigate('/createstory');
   };
 

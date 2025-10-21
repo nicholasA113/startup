@@ -5,6 +5,12 @@ import './communityboard.css';
 
 export function CommunityBoard(){
     const navigate = useNavigate();
+    const [communityBoardStories, setCommunityBoardStories] = useState([]);
+
+    useEffect (() => {
+        const storedStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
+        setCommunityBoardStories(storedStories);
+    }, []);
 
     return (
         <main id="main-page">
@@ -17,20 +23,28 @@ export function CommunityBoard(){
                 <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
                 <hr />
             </header>
+
             <section id="sections-page">
                 <header id="page-title"><u><b>Community Board</b></u></header>
                 <br />
-                <Button className="story-card" onClick={() => navigate('/story')}>
-                    <b>The Haunted Mansion</b>
-                    <p>by TrashBoat1848</p>
-                    <p>5❤️</p>
-                </Button>
-                <Button className="story-card" onClick={() => navigate('/story')}>
-                    <b>New Sports Class</b>
-                    <p>by TheAmazingSpider-Man</p>
-                    <p>3❤️</p>
-                </Button>
+
+            {communityBoardStories.length === 0 ? (
+                <p style={{color: 'white'}}>No stories added to community board yet.</p>)
+                : (
+                    communityBoardStories.map((story, index) => (
+                        <Button key={index} className="story-card"
+                        onClick={() => {
+                            localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                            navigate('/story');
+                        }}>
+                            <b>{story.title}</b>
+                            <b>{story.author}</b>
+                        </Button>
+                    ))
+                )
+            }
             </section>
+
             <footer className="footer">
                 <hr />
                 <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
