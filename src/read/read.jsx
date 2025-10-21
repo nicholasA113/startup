@@ -7,7 +7,6 @@ export function Read() {
   const navigate = useNavigate();
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
 
-  // pull from localStorage
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
@@ -19,9 +18,8 @@ export function Read() {
       ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
       : '');
 
-  const title = selectedReadStory?.title || storyTitle || 'Untitled Story';
-  const author =
-    selectedReadStory?.author || storedTempUser?.username || 'Anonymous';
+  const title = selectedReadStory?.title;
+  const author = selectedReadStory?.author;
 
   const handleSaveStory = () => {
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
@@ -70,11 +68,11 @@ export function Read() {
       <section id="story">
         <header id="storyTitle">
           <b>
-            <u>{title}</u>
+            <u>{selectedReadStory.title}</u>
           </b>
         </header>
         <p id="username">
-          <i>by {author}</i>
+          <i>by {selectedreadStory.author}</i>
         </p>
         <p id="storyContent">{fullStory}</p>
 
