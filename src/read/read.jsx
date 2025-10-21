@@ -65,11 +65,11 @@ export function Read() {
       <section id="story">
         <header id="storyTitle">
           <b>
-            <u>{selectedReadStory.title}</u>
+            <u>{title}</u>
           </b>
         </header>
         <p id="username">
-          <i>by {selectedReadStory.author}</i>
+          <i>by {author}</i>
         </p>
         <p id="storyContent">{fullStory}</p>
 
