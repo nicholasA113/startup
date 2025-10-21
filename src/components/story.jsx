@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import '../read/read.css';
@@ -12,12 +12,29 @@ export function Story() {
 
   if (!selectedStory) return <p>No story selected</p>;
 
+  useEffect (() => {
+    const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
+    const exists = communityBoardStories.some(
+      story => story.content === selectedStory.content
+    );
+    setPostToCommunity(exists);
+  }, [selectedStory]);
+
   const handleSaveToCommunity = () => {
+    let ommunityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
+
     if (postToCommunity) {
-      const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-      communityBoardStories.push(selectedStory);
-      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+      const exists = communityBoardStories.some(
+        story => story.content === selectedStory.content
+      );
+      if (!exists) communityBoardStories.push(selectedStory);
     }
+    else {
+      communityBoardStories = communityBoardStories.filter(
+        story => story.content !== selectedStory.content
+      );
+    }
+    localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
   }
 
   return (
