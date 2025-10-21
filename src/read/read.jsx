@@ -94,7 +94,7 @@ export function Read() {
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input type="checkbox" id="checkbox1" checked={postToCommunity}
-              onChange={(e) => setPostToCommunity(e.target.checked)} />
+                    onChange={(e) => setPostToCommunity(e.target.checked)} />
               <span> | </span>
             </>
           )}
