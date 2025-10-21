@@ -10,7 +10,7 @@ export function Read() {
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
   const filledWords = JSON.parse(localStorage.getItem('filledWords'));
-  const storyTitle = JSON.parse(localStorage.getItem("storyTitle"));
+  const storyTitle = localStorage.getItem('storyTitle');
 
   const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
     : selectedReadStory?.content || '';
