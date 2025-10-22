@@ -13,7 +13,7 @@ export function Read() {
   const storyTitle = localStorage.getItem('storyTitle');
 
   const [postToCommunity, setPostToCommunity] = useState(false);
-  const [isFavorited, setIsFavorite] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
     : selectedReadStory?.content || '';
