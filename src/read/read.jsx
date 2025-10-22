@@ -6,6 +6,7 @@ import './read.css';
 export function Read() {
   const navigate = useNavigate();
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+  const username = storedTempUser?.username || 'Guest';
 
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
@@ -25,24 +26,29 @@ export function Read() {
   const currentStory = { title, content: fullStory, author };
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
-    const isAlreadyFavorited = favorites.some(
+    const userFavorites =
+      JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
+    const isAlreadyFavorited = userFavorites.some(
       (story) => story.content === currentStory.content
     );
     setIsFavorited(isAlreadyFavorited);
-  }, [currentStory.content]);
-  
+  }, [currentStory.content, username]);
+
   const saveFavoriteIfNeeded = (story) => {
-    let favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+    let userFavorites =
+      JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
 
     if (favoritedPending) {
-      const exists = favorites.some((s) => s.content === story.content);
-      if (!exists) favorites.push(story);
+      const exists = userFavorites.some((s) => s.content === story.content);
+      if (!exists) userFavorites.push(story);
     } else {
-      favorites = favorites.filter((s) => s.content !== story.content);
+      userFavorites = userFavorites.filter((s) => s.content !== story.content);
     }
 
-    localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+    localStorage.setItem(
+      `favoriteStories_${username}`,
+      JSON.stringify(userFavorites)
+    );
   };
 
   const handleSaveStory = () => {
@@ -156,7 +162,10 @@ export function Read() {
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
+        <NavLink
+          className="nav-link"
+          to="https://github.com/nicholasA113/startup"
+        >
           Github
         </NavLink>
       </footer>
