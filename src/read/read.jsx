@@ -13,12 +13,33 @@ export function Read() {
   const storyTitle = localStorage.getItem('storyTitle');
 
   const [postToCommunity, setPostToCommunity] = useState(false);
+  const [isFavorited, setToFavorited] = useState(false);
 
   const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
     : selectedReadStory?.content || '';
 
   const title = storyTemplate ? storyTitle : selectedReadStory?.title;
   const author = storyTemplate ? storedTempUser?.username : selectedReadStory?.author;
+  const currentStory = {title, content: fullStory, author};
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+    const isAlreadyFavorited = favorites.some(story => story.content === currentStory.content);
+    setIsFavorited(isAlreadyFavorited);
+  }, [currentStory.content]);
+
+  useEffect(() => {
+    let favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+
+    if (isFavorited) {
+      const exists = favorites.some(story => story.content === currentStory.content);
+      if (!exists) favorites.push(currentStory);
+    } else {
+      favorites = favorites.filter(story => story.content !== currentStory.content);
+    }
+
+    localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+  }, [isFavorited, currentStory]);
 
   const handleSaveStory = () => {
     const newStory = {
@@ -99,7 +120,12 @@ export function Read() {
             </>
           )}
           <label htmlFor="checkbox2">Save Story to Favorites?</label>
-          <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
+          <input
+            type="checkbox"
+            id="checkbox2"
+            checked={isFavorited}
+            onChange={(e) => setIsFavorited(e.target.checked)}
+          />
         </div>
         <br />
         <div id="next-step-buttons">
