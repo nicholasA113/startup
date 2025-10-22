@@ -14,7 +14,7 @@ export function Read() {
 
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [hasSavedOrCreated, setHasSavedOrCreated] = useState(false);
+  const [favoritedPending, setFavoritedPending] = useState(false);
 
   const fullStory = storyTemplate
     ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
@@ -31,25 +31,19 @@ export function Read() {
     );
     setIsFavorited(isAlreadyFavorited);
   }, [currentStory.content]);
-
-  useEffect(() => {
-    if (!hasSavedOrCreated) return;
-
+  
+  const saveFavoriteIfNeeded = (story) => {
     let favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
 
-    if (isFavorited) {
-      const exists = favorites.some(
-        (story) => story.content === currentStory.content
-      );
-      if (!exists) favorites.push(currentStory);
+    if (favoritedPending) {
+      const exists = favorites.some((s) => s.content === story.content);
+      if (!exists) favorites.push(story);
     } else {
-      favorites = favorites.filter(
-        (story) => story.content !== currentStory.content
-      );
+      favorites = favorites.filter((s) => s.content !== story.content);
     }
 
     localStorage.setItem('favoriteStories', JSON.stringify(favorites));
-  }, [isFavorited, currentStory, hasSavedOrCreated]);
+  };
 
   const handleSaveStory = () => {
     const newStory = { title, content: fullStory, author: storedTempUser.username };
@@ -68,7 +62,7 @@ export function Read() {
       );
     }
 
-    setHasSavedOrCreated(true);
+    saveFavoriteIfNeeded(newStory);
     navigate('/mystories');
   };
 
@@ -89,7 +83,7 @@ export function Read() {
       );
     }
 
-    setHasSavedOrCreated(true);
+    saveFavoriteIfNeeded(newStory);
     navigate('/createstory');
   };
 
@@ -141,9 +135,8 @@ export function Read() {
           <input
             type="checkbox"
             id="checkbox2"
-            checked={isFavorited}
-            onChange={(e) => setIsFavorited(e.target.checked)}
-            disabled={!hasSavedOrCreated}
+            checked={favoritedPending || isFavorited}
+            onChange={(e) => setFavoritedPending(e.target.checked)}
           />
         </div>
 
