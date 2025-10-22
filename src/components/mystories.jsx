@@ -7,7 +7,7 @@ export function MyStories() {
   const navigate = useNavigate();
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
   const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
-  const favoritedStories = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+  const favoriteStories = JSON.parse(localStorage.getItem('favoriteStories')) || [];
 
   const userStories = savedStories.filter(story => story.author === storedTempUser.username);
 
