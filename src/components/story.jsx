@@ -9,8 +9,28 @@ export function Story() {
   const selectedStory = JSON.parse(localStorage.getItem('selectedReadStory'));
 
   const [postToCommunity, setPostToCommunity] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   if (!selectedStory) return <p>No story selected</p>;
+
+  useEffect(() => {
+    const favoriteStories = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+    const exists = favoriteStories.some(story => story.content === selectedStory.content);
+    if (exists !== isFavorite) setIsFavorite(exists);
+  }, [selectedStory]);
+
+  useEffect(() => {
+    let favoriteStories = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+
+    if (isFavorite) {
+      const exists = favoriteStories.some(story => story.content === selectedStory.content);
+      if (!exists) favoriteStories.push(selectedStory);
+    } else {
+      favoriteStories = favoriteStories.filter(story => story.content !== selectedStory.content);
+    }
+
+    localStorage.setItem('favoriteStories', JSON.stringify(favoriteStories));
+  }, [isFavorite, selectedStory]);
 
   useEffect(() => {
     const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
@@ -65,7 +85,9 @@ export function Story() {
             </>
           )}
           <label htmlFor="checkbox2">Save Story to Favorites?</label>
-          <input type="checkbox" id="checkbox2" name="varCheckbox2" value="checkbox2" />
+          <input type="checkbox" id="checkbox2" checked={isFavorite}
+            onChange={(e) => setIsFavorite(e.target.checked)}
+          />
         </div>
       </section>
 
