@@ -14,68 +14,82 @@ export function Read() {
 
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [hasSavedOrCreated, setHasSavedOrCreated] = useState(false);
 
-  const fullStory = storyTemplate ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i-1])
+  const fullStory = storyTemplate
+    ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
     : selectedReadStory?.content || '';
 
   const title = storyTemplate ? storyTitle : selectedReadStory?.title;
   const author = storyTemplate ? storedTempUser?.username : selectedReadStory?.author;
-  const currentStory = {title, content: fullStory, author};
+  const currentStory = { title, content: fullStory, author };
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
-    const isAlreadyFavorited = favorites.some(story => story.content === currentStory.content);
+    const isAlreadyFavorited = favorites.some(
+      (story) => story.content === currentStory.content
+    );
     setIsFavorited(isAlreadyFavorited);
   }, [currentStory.content]);
 
   useEffect(() => {
+    if (!hasSavedOrCreated) return;
+
     let favorites = JSON.parse(localStorage.getItem('favoriteStories')) || [];
 
     if (isFavorited) {
-      const exists = favorites.some(story => story.content === currentStory.content);
+      const exists = favorites.some(
+        (story) => story.content === currentStory.content
+      );
       if (!exists) favorites.push(currentStory);
     } else {
-      favorites = favorites.filter(story => story.content !== currentStory.content);
+      favorites = favorites.filter(
+        (story) => story.content !== currentStory.content
+      );
     }
 
     localStorage.setItem('favoriteStories', JSON.stringify(favorites));
-  }, [isFavorited, currentStory]);
+  }, [isFavorited, currentStory, hasSavedOrCreated]);
 
   const handleSaveStory = () => {
-    const newStory = {
-      title,
-      content: fullStory,
-      author: storedTempUser.username,
-    };
+    const newStory = { title, content: fullStory, author: storedTempUser.username };
 
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
 
-    if (postToCommunity){
-      const communityBoardStories = JSON.parse(localStorage.getItem('communityStories')) || [];
+    if (postToCommunity) {
+      const communityBoardStories =
+        JSON.parse(localStorage.getItem('communityBoardStories')) || [];
       communityBoardStories.push(newStory);
-      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+      localStorage.setItem(
+        'communityBoardStories',
+        JSON.stringify(communityBoardStories)
+      );
     }
+
+    setHasSavedOrCreated(true);
     navigate('/mystories');
   };
 
   const handleCreateAnother = () => {
-    const newStory = {
-      title,
-      content: fullStory,
-      author: storedTempUser.username,
-    };
+    const newStory = { title, content: fullStory, author: storedTempUser.username };
+
     const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
     savedStories.push(newStory);
     localStorage.setItem('savedStories', JSON.stringify(savedStories));
 
-    if (postToCommunity){
-      const communityBoardStories = JSON.parse(localStorage.getItem('communityStories')) || [];
+    if (postToCommunity) {
+      const communityBoardStories =
+        JSON.parse(localStorage.getItem('communityBoardStories')) || [];
       communityBoardStories.push(newStory);
-      localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+      localStorage.setItem(
+        'communityBoardStories',
+        JSON.stringify(communityBoardStories)
+      );
     }
 
+    setHasSavedOrCreated(true);
     navigate('/createstory');
   };
 
@@ -114,8 +128,12 @@ export function Read() {
           {storedTempUser?.username === author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
-              <input type="checkbox" id="checkbox1" checked={postToCommunity}
-                    onChange={(e) => setPostToCommunity(e.target.checked)} />
+              <input
+                type="checkbox"
+                id="checkbox1"
+                checked={postToCommunity}
+                onChange={(e) => setPostToCommunity(e.target.checked)}
+              />
               <span> | </span>
             </>
           )}
@@ -125,8 +143,10 @@ export function Read() {
             id="checkbox2"
             checked={isFavorited}
             onChange={(e) => setIsFavorited(e.target.checked)}
+            disabled={!hasSavedOrCreated}
           />
         </div>
+
         <br />
         <div id="next-step-buttons">
           <Button className="buttons" onClick={handleSaveStory}>
@@ -143,10 +163,7 @@ export function Read() {
 
       <footer className="footer">
         <hr />
-        <NavLink
-          className="nav-link"
-          to="https://github.com/nicholasA113/startup"
-        >
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
           Github
         </NavLink>
       </footer>
