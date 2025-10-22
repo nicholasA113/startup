@@ -27,7 +27,6 @@ export function CommunityBoard(){
             <section id="sections-page">
                 <header id="page-title"><u><b>Community Board</b></u></header>
                 <br />
-
             {communityBoardStories.length === 0 ? (
                 <p style={{color: 'white', textAlign: 'center'}}>No stories added to community board yet.</p>)
                 : (
