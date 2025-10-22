@@ -7,6 +7,7 @@ export function MyStories() {
   const navigate = useNavigate();
   const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
   const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
+  const favoritedStories = JSON.parse(localStorage.getItem('favoriteStories')) || [];
 
   const userStories = savedStories.filter(story => story.author === storedTempUser.username);
 
@@ -46,13 +47,23 @@ export function MyStories() {
         <br />
         <p><u>Favorited Stories</u></p>
 
-        <div
-          className="story-card"
-          onClick={() => navigate('/story')}
-        >
-          <h3>New Sports Class</h3>
-          <p><i>by TheAmazingSpider-man</i></p>
-        </div>
+        {favoriteStories.length > 0 ? (
+          favoriteStories.map((story, i) => (
+            <div
+              key={story.content}
+              className="story-card"
+              onClick={() => {
+                localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                navigate('/story');
+              }}
+            >
+              <h3>{story.title}</h3>
+              <p><i>by {story.author}</i></p>
+            </div>
+          ))
+        ) : (
+          <p>No favorite stories yet.</p>
+        )}
       </section>
 
       <footer className="footer">
