@@ -105,8 +105,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+**All functionality implemented or mocked out** - full functionallity of users able to create stories with their specified word inputs, posting stories to community board, and saving stories to favorites  
+**Hooks** - useEffect and useState functions implemented for storing and managing data  
 
 ## 🚀 Service deliverable
 
