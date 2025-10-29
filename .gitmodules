@@ -1,0 +1,3 @@
+[submodule "simon-service"]
+	path = simon-service
+	url = htps://github.com/nicholasA113/simon-service.git
