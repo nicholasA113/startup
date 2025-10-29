@@ -133,6 +133,12 @@ function setAuthCookie(res, authToken) {
   });
 }
 
+apiRouter.get('/quote', async (_req, res) => {
+  const response = await fetch('https://api.api-ninjas.com/v2/randomquotes');
+  const quote = await response.json();
+  res.send(quote);
+});
+
 app.use(function (err, req, res, next) {
   res.status(500).send({ type: err.name, message: err.message });
 });
