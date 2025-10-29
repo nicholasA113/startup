@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const fetch = require('node-fetch');
 
 const authCookieName = 'token';
 
@@ -20,30 +21,21 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use(`api`, apiRouter);
 
-const verifyUser = async (req, res, next) => {
-    const user = await findUser('token', req.cookies[authCookieName]);
-    if (user) {
-        next();
-    }
-    else {
-        res.status(401).send({msg: 'Unauthorized'});
-    }
-}
 
 apiRouter.post('/auth/create', async (req, res) => {
-    if (await findUser('username', req.body.username)) {
+    const {username, password} = req.body;
+    if (await findUser('username', username)) {
         res.status(409).send({msg: 'Existing user'});
     }
-    else {
-        const user = await createUser(req.body.username, req.body.password);
-        setAuthCookie(res, user.token);
-        res.send({username: user.username});
-    }
+    const user = await createUser(username, password);
+    setAuthCookie(res, user.token);
+    res.send({username: user.username});
 });
 
 apiRouter.post('/auth/login', async(req, res) => {
-    const user = await findUser('username', req.body.username);
-    if (user && await bcrypt.compare(req.body.password, user.password)) {
+    const { username, password } = req.body;
+    const user = await findUser('username', username);
+    if (user && await bcrypt.compare(password, user.password)) {
         user.token = uuid.v4();
         setAuthCookie(res, user.token);
         res.send({username: user.username});
@@ -60,21 +52,54 @@ apiRouter.delete('/auth/logout', async(req, res) => {
     }
     res.clearCookie(authCookieName);
     res.status(204).end();
-})
+});
+
+
+const verifyAuth = async (req, res, next) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+        req.user = user;
+        next();
+    }
+    else {
+        res.status(401).send({msg: 'Unauthorized'});
+    }
+};
+
+apiRouter.get('/stories', async(_req, res) => {
+    res.send(stories);
+});
+
+apiRouter.get('/mystories', verifyAuth, (req, res) => {
+    const userStories = stories.filter(story => story.author === req.user.username);
+    res.send(userStories);
+});
+
+apiRouter.post('/stories', verifyAuth, async(req, res) => {
+    const {title, content, author, postToCommunity} = req.body;
+    const newStory = {title, content, author, postToCommunity, id: uuid.v4()};
+    stories.push(newStory);
+    res.send(newStory);
+});
+
+apiRouter.get('/favorites', verifyAuth, (req, res) => {
+    const userFavorites = favorites[req.user.username] || [];
+    res.send(userFavorites);
+});
 
 async function createUser(username, password){
     const passwordHash = await bcrypt.hash(password, 10);
     const user = {username, password: passwordHash, token: uuid.v4()};
     users.push(user);
     return user;
-}
+};
 
 async function findUser(field, value) {
     if (!value){
         return null;
     }
     return users.find((u) => u[field] === value);
-}
+};
 
 function setAuthCookie(res, authToken){
     res.cookie(authCookieName, authToken, {
@@ -83,16 +108,7 @@ function setAuthCookie(res, authToken){
         httpOnly: true,
         sameSite: 'strict',
     });
-}
-
-apiRouter.get('/mystories', verifyAuth, (req, res) => {
-    const userStories = stories.filter(story => story.author === req.user.username);
-    res.send(userStories);
-});
-
-app.use(function (err, req, res, next) {
-    res.status(500).send({type: err.name, message: err.message});
-});
+};
 
 app.use((_req, res) => {
     res.sendFile('index.html', {root: 'public'});
