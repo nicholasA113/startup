@@ -5,6 +5,8 @@ const uuid = require('uuid');
 const app = express();
 const fetch = require('node-fetch');
 
+require('dotenv').config();
+
 const authCookieName = 'token';
 
 let users = [];
@@ -134,9 +136,23 @@ function setAuthCookie(res, authToken) {
 }
 
 apiRouter.get('/quote', async (_req, res) => {
-  const response = await fetch('https://api.api-ninjas.com/v2/randomquotes');
-  const quote = await response.json();
-  res.send(quote);
+  try {
+    const response = await fetch('https://api.api-ninjas.com/v2/randomquotes', {
+      headers: {
+        'X-Api-Key': process.env.NINJA_API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
+
+    const quote = await response.json();
+    res.send(quote);
+  } catch (err) {
+    console.error('Error fetching quote:', err);
+    res.status(500).send({ error: 'Failed to fetch quote' });
+  }
 });
 
 app.use(function (err, req, res, next) {
