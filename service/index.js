@@ -84,3 +84,20 @@ function setAuthCookie(res, authToken){
         sameSite: 'strict',
     });
 }
+
+apiRouter.get('/mystories', verifyAuth, (req, res) => {
+    const userStories = stories.filter(story => story.author === req.user.username);
+    res.send(userStories);
+});
+
+app.use(function (err, req, res, next) {
+    res.status(500).send({type: err.name, message: err.message});
+});
+
+app.use((_req, res) => {
+    res.sendFile('index.html', {root: 'public'});
+});
+
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+});
