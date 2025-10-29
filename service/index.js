@@ -61,3 +61,26 @@ apiRouter.delete('/auth/logout', async(req, res) => {
     res.clearCookie(authCookieName);
     res.status(204).end();
 })
+
+async function createUser(username, password){
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = {username, password: passwordHash, token: uuid.v4()};
+    users.push(user);
+    return user;
+}
+
+async function findUser(field, value) {
+    if (!value){
+        return null;
+    }
+    return users.find((u) => u[field] === value);
+}
+
+function setAuthCookie(res, authToken){
+    res.cookie(authCookieName, authToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+}
