@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './communityboard.css';
-import { getStories } from '../../service/index';
 
 export function CommunityBoard() {
   const navigate = useNavigate();
@@ -11,11 +10,15 @@ export function CommunityBoard() {
   useEffect(() => {
     async function fetchStories() {
       try {
-        const stories = await getStories();
+        const response = await fetch('/api/stories');
+        if (!response.ok) {
+          throw new Error('Failed to load stories');
+        }
+        const stories = await response.json();
         setCommunityBoardStories(stories);
+        localStorage.setItem('communityBoardStories', JSON.stringify(stories));
       } catch (err) {
         console.error('Error loading community board stories:', err);
-        // fallback to localStorage if backend fails
         const storedStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
         setCommunityBoardStories(storedStories);
       }
