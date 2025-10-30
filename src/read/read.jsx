@@ -15,7 +15,6 @@ export function Read() {
 
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [favoritedPending, setFavoritedPending] = useState(false);
 
   const fullStory = storyTemplate
     ? storyTemplate.replace(/{{(\d+)}}/g, (_, i) => filledWords[i - 1])
@@ -23,7 +22,8 @@ export function Read() {
 
   const title = storyTemplate ? storyTitle : selectedReadStory?.title;
   const author = storyTemplate ? username : selectedReadStory?.author;
-  const currentStory = { title, content: fullStory, author };
+
+  const currentStory = { title, content: fullStory, author, postToCommunity };
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -40,40 +40,32 @@ export function Read() {
     checkFavorite();
   }, [currentStory.content]);
 
-const handleSaveStory = async () => {
-  try {
-    const saveRes = await fetch('/api/mystories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(currentStory),
-    });
-    if (!saveRes.ok) throw new Error('Failed to save story');
-
-    if (postToCommunity) {
-      await fetch('/api/stories', {
+  const handleSaveStory = async () => {
+    try {
+      const saveRes = await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(currentStory),
       });
+
+      if (!saveRes.ok) throw new Error('Failed to save story');
+      const savedStory = await saveRes.json();
+
+      if (isFavorited) {
+        await fetch(`/api/favorites/${savedStory.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      navigate('/mystories');
+    } catch (err) {
+      console.error(err);
+      alert('Error saving story.');
     }
+  };
 
-    if (favoritedPending) {
-      await fetch('/api/favorites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentStory),
-      });
-    }
-
-    navigate('/mystories');
-  } catch (err) {
-    console.error(err);
-    alert('Error saving story.');
-  }
-};
-
-
-  const handleDeleteStory = async () => {
+  const handleDeleteStory = () => {
     navigate('/createstory');
   };
 
@@ -87,20 +79,15 @@ const handleSaveStory = async () => {
   };
 
   const toggleFavorite = async (checked) => {
-    setFavoritedPending(checked);
+    setIsFavorited(checked);
     try {
-      if (checked) {
-        await fetch('/api/favorites', {
+      if (selectedReadStory && selectedReadStory.id) {
+        await fetch(`/api/favorites/${selectedReadStory.id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentStory),
         });
       } else {
-        await fetch('/api/favorites', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentStory),
-        });
+        console.warn('Story must be saved before it can be favorited.');
       }
     } catch (err) {
       console.error('Error updating favorite:', err);
@@ -112,10 +99,18 @@ const handleSaveStory = async () => {
       <header id="page-guidance">
         <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>
+          Create Story
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>
+          My Stories
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>
+          Community Board
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>
+          About
+        </Button>
         <hr />
       </header>
 
@@ -143,7 +138,7 @@ const handleSaveStory = async () => {
           <input
             type="checkbox"
             id="checkbox2"
-            checked={favoritedPending || isFavorited}
+            checked={isFavorited}
             onChange={(e) => toggleFavorite(e.target.checked)}
           />
         </div>
