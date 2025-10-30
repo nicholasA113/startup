@@ -9,24 +9,40 @@ export function MyStories() {
   const username = user?.username || 'Guest';
 
   const [myStories, setMyStories] = useState([]);
+  const [favoriteStories, setFavoriteStories] = useState([]);
 
   useEffect(() => {
     async function fetchMyStories() {
       try {
         const res = await fetch('/api/mystories');
         if (!res.ok) throw new Error('Failed to load your stories');
-
         const stories = await res.json();
         setMyStories(stories);
         localStorage.setItem('myStories', JSON.stringify(stories));
       } catch (err) {
-        console.error('Error loading stories:', err);
+        console.error('Error loading your stories:', err);
         const storedStories = JSON.parse(localStorage.getItem('myStories')) || [];
         setMyStories(storedStories);
       }
     }
-
     fetchMyStories();
+  }, []);
+
+  useEffect(() => {
+    async function fetchFavorites() {
+      try {
+        const res = await fetch('/api/favorites');
+        if (!res.ok) throw new Error('Failed to load favorites');
+        const favs = await res.json();
+        setFavoriteStories(favs);
+        localStorage.setItem('favoriteStories', JSON.stringify(favs));
+      } catch (err) {
+        console.error('Error loading favorites:', err);
+        const storedFavs = JSON.parse(localStorage.getItem('favoriteStories')) || [];
+        setFavoriteStories(storedFavs);
+      }
+    }
+    fetchFavorites();
   }, []);
 
   return (
@@ -52,6 +68,33 @@ export function MyStories() {
           </p>
         ) : (
           myStories.map((story) => (
+            <Button
+              key={story.id || story.content}
+              className="story-card"
+              onClick={() => {
+                localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                navigate('/story');
+              }}
+            >
+              <b>{story.title}</b>
+              <br />
+              <i>by {story.author}</i>
+            </Button>
+          ))
+        )}
+      </section>
+
+      <section id="sections-page">
+        <header id="page-title">
+          <u><b>{username}’s Favorites</b></u>
+        </header>
+        <br />
+        {favoriteStories.length === 0 ? (
+          <p style={{ color: 'white', textAlign: 'center' }}>
+            You haven’t favorited any stories yet.
+          </p>
+        ) : (
+          favoriteStories.map((story) => (
             <Button
               key={story.id || story.content}
               className="story-card"
