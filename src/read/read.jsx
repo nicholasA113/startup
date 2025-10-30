@@ -5,8 +5,8 @@ import './read.css';
 
 export function Read() {
   const navigate = useNavigate();
-  const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
-  const username = storedTempUser?.username || 'Guest';
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user?.username || 'Guest';
 
   const selectedReadStory = JSON.parse(localStorage.getItem('selectedReadStory'));
   const storyTemplate = localStorage.getItem('storyTemplate');
@@ -22,75 +22,89 @@ export function Read() {
     : selectedReadStory?.content || '';
 
   const title = storyTemplate ? storyTitle : selectedReadStory?.title;
-  const author = storyTemplate ? storedTempUser?.username : selectedReadStory?.author;
+  const author = storyTemplate ? username : selectedReadStory?.author;
   const currentStory = { title, content: fullStory, author };
 
   useEffect(() => {
-    const userFavorites =
-      JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
-    const isAlreadyFavorited = userFavorites.some(
-      (story) => story.content === currentStory.content
-    );
-    setIsFavorited(isAlreadyFavorited);
-  }, [currentStory.content, username]);
+    const checkFavorite = async () => {
+      try {
+        const res = await fetch('/api/favorites');
+        if (!res.ok) return;
+        const favs = await res.json();
+        const found = favs.some((s) => s.content === currentStory.content);
+        setIsFavorited(found);
+      } catch (err) {
+        console.error('Error checking favorites:', err);
+      }
+    };
+    checkFavorite();
+  }, [currentStory.content]);
 
-  const saveFavoriteIfNeeded = (story) => {
-    let userFavorites =
-      JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
+  const handleSaveStory = async () => {
+    try {
+      const saveRes = await fetch('/api/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentStory),
+      });
 
-    if (favoritedPending) {
-      const exists = userFavorites.some((s) => s.content === story.content);
-      if (!exists) userFavorites.push(story);
-    } else {
-      userFavorites = userFavorites.filter((s) => s.content !== story.content);
+      if (!saveRes.ok) throw new Error('Failed to save story');
+
+      if (postToCommunity) {
+        await fetch('/api/community', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentStory),
+        });
+      }
+
+      if (favoritedPending) {
+        await fetch('/api/favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentStory),
+        });
+      }
+
+      navigate('/mystories');
+    } catch (err) {
+      console.error(err);
+      alert('Error saving story.');
     }
-
-    localStorage.setItem(
-      `favoriteStories_${username}`,
-      JSON.stringify(userFavorites)
-    );
   };
 
-  const handleSaveStory = () => {
-    const newStory = { title, content: fullStory, author: storedTempUser.username };
-
-    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
-    savedStories.push(newStory);
-    localStorage.setItem('savedStories', JSON.stringify(savedStories));
-
-    if (postToCommunity) {
-      const communityBoardStories =
-        JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-      communityBoardStories.push(newStory);
-      localStorage.setItem(
-        'communityBoardStories',
-        JSON.stringify(communityBoardStories)
-      );
-    }
-
-    saveFavoriteIfNeeded(newStory);
-    navigate('/mystories');
-  };
-
-  const handleCreateAnother = () => {
-    const newStory = { title, content: fullStory, author: storedTempUser.username };
-
-    const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
-    savedStories.push(newStory);
-    localStorage.setItem('savedStories', JSON.stringify(savedStories));
-
-    if (postToCommunity) {
-      const communityBoardStories =
-        JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-      communityBoardStories.push(newStory);
-      localStorage.setItem(
-        'communityBoardStories',
-        JSON.stringify(communityBoardStories)
-      );
-    }
-
-    saveFavoriteIfNeeded(newStory);
+  const handleDeleteStory = async () => {
     navigate('/createstory');
+  };
+
+  const handleCreateAnother = async () => {
+    try {
+      await handleSaveStory();
+      navigate('/createstory');
+    } catch {
+      navigate('/createstory');
+    }
+  };
+
+  const toggleFavorite = async (checked) => {
+    setFavoritedPending(checked);
+    try {
+      if (checked) {
+        await fetch('/api/favorites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentStory),
+        });
+      } else {
+        await fetch('/api/favorites', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentStory),
+        });
+      }
+    } catch (err) {
+      console.error('Error updating favorite:', err);
+    }
   };
 
   return (
@@ -98,34 +112,22 @@ export function Read() {
       <header id="page-guidance">
         <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>
-          Create Story
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>
-          My Stories
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>
-          Community Board
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>
-          About
-        </Button>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
         <hr />
       </header>
 
       <section id="story">
         <header id="storyTitle">
-          <b>
-            <u>{title}</u>
-          </b>
+          <b><u>{title}</u></b>
         </header>
-        <p id="username">
-          <i>by {author}</i>
-        </p>
+        <p id="username"><i>by {author}</i></p>
         <p id="storyContent">{fullStory}</p>
 
         <div id="checkbox-area">
-          {storedTempUser?.username === author && (
+          {username === author && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input
@@ -142,30 +144,21 @@ export function Read() {
             type="checkbox"
             id="checkbox2"
             checked={favoritedPending || isFavorited}
-            onChange={(e) => setFavoritedPending(e.target.checked)}
+            onChange={(e) => toggleFavorite(e.target.checked)}
           />
         </div>
 
         <br />
         <div id="next-step-buttons">
-          <Button className="buttons" onClick={handleSaveStory}>
-            Save Story
-          </Button>
-          <Button className="buttons" onClick={() => navigate('/createstory')}>
-            Delete Story
-          </Button>
-          <Button className="buttons" onClick={handleCreateAnother}>
-            Create Another Story
-          </Button>
+          <Button className="buttons" onClick={handleSaveStory}>Save Story</Button>
+          <Button className="buttons" onClick={handleDeleteStory}>Delete Story</Button>
+          <Button className="buttons" onClick={handleCreateAnother}>Create Another Story</Button>
         </div>
       </section>
 
       <footer className="footer">
         <hr />
-        <NavLink
-          className="nav-link"
-          to="https://github.com/nicholasA113/startup"
-        >
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
           Github
         </NavLink>
       </footer>

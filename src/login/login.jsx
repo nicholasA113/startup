@@ -9,30 +9,46 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    const storedTempUser = JSON.parse(localStorage.getItem('tempUser'));
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (
-      storedTempUser &&
-      username === storedTempUser.username &&
-      password === storedTempUser.password
-    ) {
-      localStorage.setItem('tempUser', JSON.stringify({ username, password }));
-      navigate('/createstory');
-    } else {
-      setError('User not found. Please click Create or check your login information.');
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/createstory');
+      } else {
+        setError('Invalid username or password.');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
     }
   };
 
-  const handleCreate = () => {
-    if (!username || !password) {
-      setError('Please enter both a username and password to create an account.');
-      return;
+  const handleCreate = async () => {
+    try {
+      const response = await fetch('/api/auth/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/createstory');
+      } else if (response.status === 409) {
+        setError('Username already exists.');
+      } else {
+        setError('Account creation failed.');
+      }
+    } catch (err) {
+      setError('Network error.');
     }
-    const tempUser = { username, password };
-    localStorage.setItem('tempUser', JSON.stringify(tempUser));
-    setError('');
-    navigate('/createstory');
   };
 
   return (

@@ -1,15 +1,28 @@
-import React from 'react';
-import '../communityboard/communityboard.css';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import '../communityboard/communityboard.css';
 
 export function MyStories() {
   const navigate = useNavigate();
-  const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
-  const savedStories = JSON.parse(localStorage.getItem('savedStories')) || [];
-  const favoriteStories = JSON.parse(localStorage.getItem(`favoriteStories_${storedTempUser.username}`)) || [];
+  const [myStories, setMyStories] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
 
-  const userStories = savedStories.filter(story => story.author === storedTempUser.username);
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const resStories = await fetch('/api/mystories');
+        if (resStories.ok) setMyStories(await resStories.json());
+
+        const resFavs = await fetch('/api/favorites');
+        if (resFavs.ok) setFavorites(await resFavs.json());
+      } catch (err) {
+        console.error('Error loading stories:', err);
+      }
+    };
+    fetchStories();
+  }, []);
 
   return (
     <main id="main-page">
@@ -25,12 +38,12 @@ export function MyStories() {
 
       <section id="sections-page">
         <header id="page-title"><b><u>My Stories</u></b></header>
-        <p><u>{storedTempUser.username}'s Stories</u></p>
+        <p><u>{user.username}'s Stories</u></p>
 
-        {userStories.length > 0 ? (
-          userStories.map((story, i) => (
+        {myStories.length > 0 ? (
+          myStories.map((story) => (
             <div
-              key={i}
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
@@ -47,10 +60,10 @@ export function MyStories() {
         <br />
         <p><u>Favorited Stories</u></p>
 
-        {favoriteStories.length > 0 ? (
-          favoriteStories.map((story, i) => (
+        {favorites.length > 0 ? (
+          favorites.map((story) => (
             <div
-              key={story.content}
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));

@@ -12,53 +12,62 @@ export function Story() {
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  if (!selectedStory) return <p>No story selected</p>;
-
-  useEffect(() => {
-    const communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-    const favoriteStories = JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
-
-    const isOnCommunityBoard = communityBoardStories.some(
-      story => story.content === selectedStory.content
-    );
-    const isFavorited = favoriteStories.some(
-      story => story.content === selectedStory.content
-    );
-
-    setPostToCommunity(isOnCommunityBoard);
-    setIsFavorite(isFavorited);
-  }, [selectedStory, username]);
-
-  const handleCommunityToggle = (checked) => {
-    setPostToCommunity(checked);
-    let communityBoardStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-
-    if (checked) {
-      const exists = communityBoardStories.some(story => story.content === selectedStory.content);
-      if (!exists) communityBoardStories.push(selectedStory);
-    } else {
-      communityBoardStories = communityBoardStories.filter(
-        story => story.content !== selectedStory.content
-      );
-    }
-
-    localStorage.setItem('communityBoardStories', JSON.stringify(communityBoardStories));
+  if (!selectedStory) {
+    return <p>No story selected</p>
   };
 
-  const handleFavoriteToggle = (checked) => {
-    setIsFavorite(checked);
-    let favoriteStories = JSON.parse(localStorage.getItem(`favoriteStories_${username}`)) || [];
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const resStories = await fetch('/api/stories');
+        const communityStories = await resStories.json();
+        const isOnCommunity = communityStories.some(story => story.id === selectedStory.id);
+        setPostToCommunity(isOnCommunity);
 
-    if (checked) {
-      const exists = favoriteStories.some(story => story.content === selectedStory.content);
-      if (!exists) favoriteStories.push(selectedStory);
-    } else {
-      favoriteStories = favoriteStories.filter(
-        story => story.content !== selectedStory.content
-      );
+        const resFavorites = await fetch('/api/favorites');
+        if (resFavorites.ok) {
+          const favoriteIds = await resFavorites.json();
+          setIsFavorite(favoriteIds.includes(selectedStory.id));
+        }
+      } catch (err) {
+        console.error('Error loading story states:', err);
+      }
     }
 
-    localStorage.setItem(`favoriteStories_${username}`, JSON.stringify(favoriteStories));
+    fetchData();
+  }, [selectedStory.id]);
+
+  const handleCommunityToggle = async (checked) => {
+    setPostToCommunity(checked);
+
+    try {
+      if (checked) {
+        await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: selectedStory.title,
+            content: selectedStory.content,
+            postToCommunity: true,
+          }),
+        });
+      } else {
+        console.log('Would remove from community board (future backend feature)');
+      }
+    } catch (err) {
+      console.error('Error updating community status:', err);
+    }
+  };
+
+  const handleFavoriteToggle = async (checked) => {
+    setIsFavorite(checked);
+    try {
+      await fetch(`/api/favorites/${selectedStory.id}`, {
+        method: 'POST',
+      });
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
+    }
   };
 
   return (
