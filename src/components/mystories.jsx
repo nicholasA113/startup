@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import './mystories.css';
+import '../mystories.css';
 
 export function MyStories() {
   const navigate = useNavigate();
