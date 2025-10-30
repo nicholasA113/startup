@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './communityboard.css';
-import { getStories } from '../api';
+import { getStories } from '../../service/index';
 
 export function CommunityBoard() {
   const navigate = useNavigate();
