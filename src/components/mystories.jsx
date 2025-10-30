@@ -5,44 +5,30 @@ import '../communityboard/communityboard.css';
 
 export function MyStories() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
-  const username = user?.username || 'Guest';
-
   const [myStories, setMyStories] = useState([]);
-  const [favoriteStories, setFavoriteStories] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const user = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
 
   useEffect(() => {
-    async function fetchMyStories() {
+    const fetchStories = async () => {
       try {
-        const res = await fetch('/api/mystories');
-        if (!res.ok) throw new Error('Failed to load your stories');
-        const stories = await res.json();
-        setMyStories(stories);
-        localStorage.setItem('myStories', JSON.stringify(stories));
-      } catch (err) {
-        console.error('Error loading your stories:', err);
-        const storedStories = JSON.parse(localStorage.getItem('myStories')) || [];
-        setMyStories(storedStories);
-      }
-    }
-    fetchMyStories();
-  }, []);
+        const resStories = await fetch('/api/mystories');
+        if (resStories.ok) {
+          const data = await resStories.json();
+          setMyStories(data);
+        }
 
-  useEffect(() => {
-    async function fetchFavorites() {
-      try {
-        const res = await fetch('/api/favorites');
-        if (!res.ok) throw new Error('Failed to load favorites');
-        const favs = await res.json();
-        setFavoriteStories(favs);
-        localStorage.setItem('favoriteStories', JSON.stringify(favs));
+        const resFavs = await fetch('/api/favorites');
+        if (resFavs.ok) {
+          const favData = await resFavs.json();
+          setFavorites(favData);
+        }
       } catch (err) {
-        console.error('Error loading favorites:', err);
-        const storedFavs = JSON.parse(localStorage.getItem('favoriteStories')) || [];
-        setFavoriteStories(storedFavs);
+        console.error('Error loading stories:', err);
       }
-    }
-    fetchFavorites();
+    };
+
+    fetchStories();
   }, []);
 
   return (
@@ -58,18 +44,13 @@ export function MyStories() {
       </header>
 
       <section id="sections-page">
-        <header id="page-title">
-          <u><b>{username}’s Stories</b></u>
-        </header>
-        <br />
-        {myStories.length === 0 ? (
-          <p style={{ color: 'white', textAlign: 'center' }}>
-            You haven’t created any stories yet.
-          </p>
-        ) : (
+        <header id="page-title"><b><u>My Stories</u></b></header>
+        <p><u>{user.username}'s Stories</u></p>
+
+        {myStories.length > 0 ? (
           myStories.map((story) => (
             <Button
-              key={story.id || story.content}
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
@@ -81,22 +62,17 @@ export function MyStories() {
               <i>by {story.author}</i>
             </Button>
           ))
-        )}
-      </section>
-
-      <section id="sections-page">
-        <header id="page-title">
-          <u><b>{username}’s Favorites</b></u>
-        </header>
-        <br />
-        {favoriteStories.length === 0 ? (
-          <p style={{ color: 'white', textAlign: 'center' }}>
-            You haven’t favorited any stories yet.
-          </p>
         ) : (
-          favoriteStories.map((story) => (
+          <p>No stories created yet.</p>
+        )}
+
+        <br />
+        <p><u>Favorited Stories</u></p>
+
+        {favorites.length > 0 ? (
+          favorites.map((story) => (
             <Button
-              key={story.id || story.content}
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
@@ -108,14 +84,14 @@ export function MyStories() {
               <i>by {story.author}</i>
             </Button>
           ))
+        ) : (
+          <p>No favorite stories yet.</p>
         )}
       </section>
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
-          Github
-        </NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
       </footer>
     </main>
   );
