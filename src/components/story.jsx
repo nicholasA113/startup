@@ -5,8 +5,8 @@ import '../read/read.css';
 
 export function Story() {
   const navigate = useNavigate();
-  const storedTempUser = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
-  const username = storedTempUser.username;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user?.username || 'Guest';
   const selectedStory = JSON.parse(localStorage.getItem('selectedReadStory'));
 
   const [postToCommunity, setPostToCommunity] = useState(false);
@@ -20,9 +20,11 @@ export function Story() {
     async function fetchData() {
       try {
         const resStories = await fetch('/api/stories');
-        const communityStories = await resStories.json();
-        const isOnCommunity = communityStories.some(story => story.id === selectedStory.id);
-        setPostToCommunity(isOnCommunity);
+        if (resStories.ok) {
+          const communityStories = await resStories.json();
+          const isOnCommunity = communityStories.some(story => story.id === selectedStory.id);
+          setPostToCommunity(isOnCommunity);
+        }
 
         const resFavorites = await fetch('/api/favorites');
         if (resFavorites.ok) {
@@ -47,12 +49,12 @@ export function Story() {
           body: JSON.stringify({
             title: selectedStory.title,
             content: selectedStory.content,
-            postToCommunity: true,
             author: username,
+            postToCommunity: true,
           }),
         });
       } else {
-        console.log('Would remove from community board (not yet implemented)');
+        await fetch(`/api/stories/${selectedStory.id}`, { method: 'DELETE' });
       }
     } catch (err) {
       console.error('Error updating community status:', err);
@@ -86,7 +88,7 @@ export function Story() {
         <p id="storyContent">{selectedStory.content}</p>
 
         <div id="checkbox-area">
-          {storedTempUser?.username === selectedStory.author && (
+          {username.toLowerCase() === selectedStory.author?.toLowerCase() && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input

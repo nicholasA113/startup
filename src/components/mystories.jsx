@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import '../communityboard/communityboard.css';
+import './mystories.css';
 
 export function MyStories() {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = user?.username || 'Guest';
+
   const [myStories, setMyStories] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const user = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
 
   useEffect(() => {
-    const fetchStories = async () => {
+    async function fetchMyStories() {
       try {
-        const resStories = await fetch('/api/mystories');
-        if (resStories.ok) {
-          const data = await resStories.json();
-          setMyStories(data);
-        }
+        const res = await fetch('/api/mystories');
+        if (!res.ok) throw new Error('Failed to load your stories');
 
-        const resFavs = await fetch('/api/favorites');
-        if (resFavs.ok) {
-          const favData = await resFavs.json();
-          setFavorites(favData);
-        }
+        const stories = await res.json();
+        setMyStories(stories);
+        localStorage.setItem('myStories', JSON.stringify(stories));
       } catch (err) {
         console.error('Error loading stories:', err);
+        const storedStories = JSON.parse(localStorage.getItem('myStories')) || [];
+        setMyStories(storedStories);
       }
-    };
+    }
 
-    fetchStories();
+    fetchMyStories();
   }, []);
 
   return (
@@ -44,13 +42,18 @@ export function MyStories() {
       </header>
 
       <section id="sections-page">
-        <header id="page-title"><b><u>My Stories</u></b></header>
-        <p><u>{user.username}'s Stories</u></p>
-
-        {myStories.length > 0 ? (
+        <header id="page-title">
+          <u><b>{username}’s Stories</b></u>
+        </header>
+        <br />
+        {myStories.length === 0 ? (
+          <p style={{ color: 'white', textAlign: 'center' }}>
+            You haven’t created any stories yet.
+          </p>
+        ) : (
           myStories.map((story) => (
             <Button
-              key={story.id}
+              key={story.id || story.content}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
@@ -62,36 +65,14 @@ export function MyStories() {
               <i>by {story.author}</i>
             </Button>
           ))
-        ) : (
-          <p>No stories created yet.</p>
-        )}
-
-        <br />
-        <p><u>Favorited Stories</u></p>
-
-        {favorites.length > 0 ? (
-          favorites.map((story) => (
-            <Button
-              key={story.id}
-              className="story-card"
-              onClick={() => {
-                localStorage.setItem('selectedReadStory', JSON.stringify(story));
-                navigate('/story');
-              }}
-            >
-              <b>{story.title}</b>
-              <br />
-              <i>by {story.author}</i>
-            </Button>
-          ))
-        ) : (
-          <p>No favorite stories yet.</p>
         )}
       </section>
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
+          Github
+        </NavLink>
       </footer>
     </main>
   );
