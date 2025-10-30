@@ -43,19 +43,11 @@ export function Story() {
     setPostToCommunity(checked);
     try {
       if (checked) {
-        await fetch('/api/stories', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: selectedStory.title,
-            content: selectedStory.content,
-            author: username,
-            postToCommunity: true,
-          }),
-        });
+        selectedStory.postToCommunity = true;
       } else {
-        await fetch(`/api/stories/${selectedStory.id}`, { method: 'DELETE' });
+        selectedStory.postToCommunity = false;
       }
+      localStorage.setItem('selectedReadStory', JSON.stringify(selectedStory));
     } catch (err) {
       console.error('Error updating community status:', err);
     }
