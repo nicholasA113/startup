@@ -5,60 +5,174 @@ import '../read/read.css';
 
 export function Story() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
-  const username = user?.username || 'Guest';
-  const selectedStory = JSON.parse(localStorage.getItem('selectedReadStory'));
+
+  const storedUser =
+    JSON.parse(localStorage.getItem('user')) ||
+    JSON.parse(localStorage.getItem('tempUser')) ||
+    { username: 'Guest' };
+  const username = storedUser.username;
+
+  const raw = localStorage.getItem('selectedReadStory');
+  const selectedStory = raw ? JSON.parse(raw) : null;
 
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!selectedStory) {
-    return <p>No story selected</p>;
+    return <main id="read-page"><p>No story selected</p></main>;
   }
 
   useEffect(() => {
-    async function fetchData() {
+    let mounted = true;
+
+    async function fetchState() {
       try {
-        const resStories = await fetch('/api/stories');
+        const resStories = await fetch('/api/stories', { credentials: 'include' });
         if (resStories.ok) {
           const communityStories = await resStories.json();
-          const isOnCommunity = communityStories.some(story => story.id === selectedStory.id);
-          setPostToCommunity(isOnCommunity);
+          if (!mounted) return;
+          const onCommunity = selectedStory.id && communityStories.some(s => s.id === selectedStory.id);
+          setPostToCommunity(Boolean(onCommunity));
+        } else {
+          console.warn('GET /api/stories returned', resStories.status);
         }
 
-        const resFavorites = await fetch('/api/favorites');
-        if (resFavorites.ok) {
-          const favoriteStories = await resFavorites.json();
-          setIsFavorite(favoriteStories.some(story => story.id === selectedStory.id));
+        const resFav = await fetch('/api/favorites', { credentials: 'include' });
+        if (resFav.ok) {
+          const favStories = await resFav.json();
+          if (!mounted) return;
+          const fav = selectedStory.id && favStories.some(s => s.id === selectedStory.id);
+          setIsFavorite(Boolean(fav));
+        } else if (resFav.status === 401) {
+          setIsFavorite(false);
+        } else {
+          console.warn('GET /api/favorites returned', resFav.status);
         }
       } catch (err) {
-        console.error('Error loading story states:', err);
+        console.error('Error fetching story state:', err);
       }
     }
 
-    fetchData();
-  }, [selectedStory.id]);
+    fetchState();
+    return () => { mounted = false; };
+  }, [selectedStory?.id]);
+
+  const updateLocalSelectedStory = (storyObj) => {
+    localStorage.setItem('selectedReadStory', JSON.stringify(storyObj));
+  };
 
   const handleCommunityToggle = async (checked) => {
+    const prev = postToCommunity;
     setPostToCommunity(checked);
+    setLoading(true);
+
     try {
-      if (checked) {
-        selectedStory.postToCommunity = true;
+      if (selectedStory.id) {
+        const res = await fetch(`/api/stories/${selectedStory.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ postToCommunity: checked }),
+        });
+
+        if (!res.ok) {
+          setPostToCommunity(prev);
+          const text = await res.text().catch(() => 'no body');
+          console.error('PUT /api/stories/:id failed:', res.status, text);
+          alert('Could not update community status on the server.');
+        } else {
+          const updated = await res.json();
+          updateLocalSelectedStory(updated);
+        }
       } else {
-        selectedStory.postToCommunity = false;
+        const res = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            title: selectedStory.title,
+            content: selectedStory.content,
+            postToCommunity: checked,
+            author: selectedStory.author || username,
+          }),
+        });
+
+        if (!res.ok) {
+          setPostToCommunity(prev);
+          const text = await res.text().catch(() => 'no body');
+          console.error('POST /api/stories failed:', res.status, text);
+          alert('Could not post story to community board.');
+        } else {
+          const created = await res.json();
+          updateLocalSelectedStory(created);
+        }
       }
-      localStorage.setItem('selectedReadStory', JSON.stringify(selectedStory));
     } catch (err) {
-      console.error('Error updating community status:', err);
+      console.error('Error toggling community status:', err);
+      setPostToCommunity(prev);
+      alert('Network error toggling community status.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleFavoriteToggle = async (checked) => {
+    const prev = isFavorite;
     setIsFavorite(checked);
+    setLoading(true);
+
     try {
-      await fetch(`/api/favorites/${selectedStory.id}`, { method: 'POST' });
+      let storyId = selectedStory.id;
+
+      if (!storyId) {
+        const resCreate = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            title: selectedStory.title,
+            content: selectedStory.content,
+            postToCommunity: false,
+            author: selectedStory.author || username,
+          }),
+        });
+
+        if (!resCreate.ok) {
+          setIsFavorite(prev);
+          const text = await resCreate.text().catch(() => 'no body');
+          console.error('Failed to create story before favoriting:', resCreate.status, text);
+          alert('Could not prepare story for favoriting.');
+          setLoading(false);
+          return;
+        }
+
+        const created = await resCreate.json();
+        storyId = created.id;
+        updateLocalSelectedStory(created);
+      }
+
+      const resFav = await fetch(`/api/favorites/${storyId}`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!resFav.ok) {
+        setIsFavorite(prev);
+        const text = await resFav.text().catch(() => 'no body');
+        console.error('POST /api/favorites/:id failed:', resFav.status, text);
+        alert('Could not toggle favorite on server.');
+      } else {
+        const favList = await resFav.json();
+        const isNowFav = favList.some(s => s.id === storyId);
+        setIsFavorite(Boolean(isNowFav));
+      }
     } catch (err) {
       console.error('Error toggling favorite:', err);
+      setIsFavorite(prev);
+      alert('Network error toggling favorite.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,7 +194,7 @@ export function Story() {
         <p id="storyContent">{selectedStory.content}</p>
 
         <div id="checkbox-area">
-          {username.toLowerCase() === selectedStory.author?.toLowerCase() && (
+          {username.toLowerCase() === (selectedStory.author || '').toLowerCase() && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input
@@ -88,16 +202,19 @@ export function Story() {
                 id="checkbox1"
                 checked={postToCommunity}
                 onChange={(e) => handleCommunityToggle(e.target.checked)}
+                disabled={loading}
               />
               <span> | </span>
             </>
           )}
+
           <label htmlFor="checkbox2">Save Story to Favorites?</label>
           <input
             type="checkbox"
             id="checkbox2"
             checked={isFavorite}
             onChange={(e) => handleFavoriteToggle(e.target.checked)}
+            disabled={loading}
           />
         </div>
       </section>

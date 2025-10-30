@@ -84,6 +84,29 @@ apiRouter.post('/stories', async (req, res) => {
   res.send(newStory);
 });
 
+apiRouter.put('/stories/:id', verifyAuth, (req, res) => {
+  const id = req.params.id;
+  const story = stories.find(s => s.id === id);
+  if (!story) return res.status(404).send({ msg: 'Story not found' });
+
+  if (story.author !== req.user.username) {
+    return res.status(403).send({ msg: 'Forbidden' });
+  }
+
+  if (typeof req.body.postToCommunity === 'boolean') {
+    story.postToCommunity = req.body.postToCommunity;
+  }
+  if (typeof req.body.title === 'string') {
+    story.title = req.body.title;
+  }
+  if (typeof req.body.content === 'string') {
+    story.content = req.body.content;
+  }
+
+  res.send(story);
+});
+
+
 apiRouter.get('/favorites', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (!user) return res.status(401).send({ msg: 'Unauthorized' });
