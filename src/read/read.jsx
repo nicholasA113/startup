@@ -40,38 +40,38 @@ export function Read() {
     checkFavorite();
   }, [currentStory.content]);
 
-  const handleSaveStory = async () => {
-    try {
-      const saveRes = await fetch('/api/stories', {
+const handleSaveStory = async () => {
+  try {
+    const saveRes = await fetch('/api/mystories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(currentStory),
+    });
+    if (!saveRes.ok) throw new Error('Failed to save story');
+
+    if (postToCommunity) {
+      await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(currentStory),
       });
-
-      if (!saveRes.ok) throw new Error('Failed to save story');
-
-      if (postToCommunity) {
-        await fetch('/api/community', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentStory),
-        });
-      }
-
-      if (favoritedPending) {
-        await fetch('/api/favorites', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentStory),
-        });
-      }
-
-      navigate('/mystories');
-    } catch (err) {
-      console.error(err);
-      alert('Error saving story.');
     }
-  };
+
+    if (favoritedPending) {
+      await fetch('/api/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentStory),
+      });
+    }
+
+    navigate('/mystories');
+  } catch (err) {
+    console.error(err);
+    alert('Error saving story.');
+  }
+};
+
 
   const handleDeleteStory = async () => {
     navigate('/createstory');

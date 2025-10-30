@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import './communityboard.css';
+import '../communityboard/communityboard.css';
 
-export function CommunityBoard() {
+export function MyStories() {
   const navigate = useNavigate();
-  const [communityBoardStories, setCommunityBoardStories] = useState([]);
+  const [myStories, setMyStories] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
 
   useEffect(() => {
-    async function fetchStories() {
+    const fetchStories = async () => {
       try {
-        const response = await fetch('/api/stories');
-        if (!response.ok) {
-          throw new Error('Failed to load stories');
-        }
-        const stories = await response.json();
-        setCommunityBoardStories(stories);
-        localStorage.setItem('communityBoardStories', JSON.stringify(stories));
-      } catch (err) {
-        console.error('Error loading community board stories:', err);
-        const storedStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-        setCommunityBoardStories(storedStories);
-      }
-    }
+        const resStories = await fetch('/api/mystories');
+        if (resStories.ok) setMyStories(await resStories.json());
 
+        const resFavs = await fetch('/api/favorites');
+        if (resFavs.ok) setFavorites(await resFavs.json());
+      } catch (err) {
+        console.error('Error loading stories:', err);
+      }
+    };
     fetchStories();
   }, []);
 
@@ -32,53 +29,59 @@ export function CommunityBoard() {
       <header id="page-guidance">
         <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>
-          Create Story
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>
-          My Stories
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>
-          Community Board
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>
-          About
-        </Button>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
         <hr />
       </header>
 
       <section id="sections-page">
-        <header id="page-title">
-          <u><b>Community Board</b></u>
-        </header>
-        <br />
-        {communityBoardStories.length === 0 ? (
-          <p style={{ color: 'white', textAlign: 'center' }}>
-            No stories added to community board yet.
-          </p>
-        ) : (
-          communityBoardStories.map((story) => (
-            <Button
-              key={story.id || story.content}
+        <header id="page-title"><b><u>My Stories</u></b></header>
+        <p><u>{user.username}'s Stories</u></p>
+
+        {myStories.length > 0 ? (
+          myStories.map((story) => (
+            <div
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
                 navigate('/story');
               }}
             >
-              <b>{story.title}</b>
-              <br />
-              <i>by {story.author}</i>
-            </Button>
+              <h3>{story.title}</h3>
+            </div>
           ))
+        ) : (
+          <p>No stories created yet.</p>
+        )}
+
+        <br />
+        <p><u>Favorited Stories</u></p>
+
+        {favorites.length > 0 ? (
+          favorites.map((story) => (
+            <div
+              key={story.id}
+              className="story-card"
+              onClick={() => {
+                localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                navigate('/story');
+              }}
+            >
+              <h3>{story.title}</h3>
+              <p><i>by {story.author}</i></p>
+            </div>
+          ))
+        ) : (
+          <p>No favorite stories yet.</p>
         )}
       </section>
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
-          Github
-        </NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
       </footer>
     </main>
   );

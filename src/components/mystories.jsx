@@ -7,20 +7,27 @@ export function MyStories() {
   const navigate = useNavigate();
   const [myStories, setMyStories] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
+  const user = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
         const resStories = await fetch('/api/mystories');
-        if (resStories.ok) setMyStories(await resStories.json());
+        if (resStories.ok) {
+          const data = await resStories.json();
+          setMyStories(data);
+        }
 
         const resFavs = await fetch('/api/favorites');
-        if (resFavs.ok) setFavorites(await resFavs.json());
+        if (resFavs.ok) {
+          const favData = await resFavs.json();
+          setFavorites(favData);
+        }
       } catch (err) {
         console.error('Error loading stories:', err);
       }
     };
+
     fetchStories();
   }, []);
 
@@ -42,7 +49,7 @@ export function MyStories() {
 
         {myStories.length > 0 ? (
           myStories.map((story) => (
-            <div
+            <Button
               key={story.id}
               className="story-card"
               onClick={() => {
@@ -50,8 +57,10 @@ export function MyStories() {
                 navigate('/story');
               }}
             >
-              <h3>{story.title}</h3>
-            </div>
+              <b>{story.title}</b>
+              <br />
+              <i>by {story.author}</i>
+            </Button>
           ))
         ) : (
           <p>No stories created yet.</p>
@@ -62,7 +71,7 @@ export function MyStories() {
 
         {favorites.length > 0 ? (
           favorites.map((story) => (
-            <div
+            <Button
               key={story.id}
               className="story-card"
               onClick={() => {
@@ -70,9 +79,10 @@ export function MyStories() {
                 navigate('/story');
               }}
             >
-              <h3>{story.title}</h3>
-              <p><i>by {story.author}</i></p>
-            </div>
+              <b>{story.title}</b>
+              <br />
+              <i>by {story.author}</i>
+            </Button>
           ))
         ) : (
           <p>No favorite stories yet.</p>

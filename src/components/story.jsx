@@ -13,8 +13,8 @@ export function Story() {
   const [isFavorite, setIsFavorite] = useState(false);
 
   if (!selectedStory) {
-    return <p>No story selected</p>
-  };
+    return <p>No story selected</p>;
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -26,8 +26,8 @@ export function Story() {
 
         const resFavorites = await fetch('/api/favorites');
         if (resFavorites.ok) {
-          const favoriteIds = await resFavorites.json();
-          setIsFavorite(favoriteIds.includes(selectedStory.id));
+          const favoriteStories = await resFavorites.json();
+          setIsFavorite(favoriteStories.some(story => story.id === selectedStory.id));
         }
       } catch (err) {
         console.error('Error loading story states:', err);
@@ -39,7 +39,6 @@ export function Story() {
 
   const handleCommunityToggle = async (checked) => {
     setPostToCommunity(checked);
-
     try {
       if (checked) {
         await fetch('/api/stories', {
@@ -49,10 +48,11 @@ export function Story() {
             title: selectedStory.title,
             content: selectedStory.content,
             postToCommunity: true,
+            author: username,
           }),
         });
       } else {
-        console.log('Would remove from community board (future backend feature)');
+        console.log('Would remove from community board (not yet implemented)');
       }
     } catch (err) {
       console.error('Error updating community status:', err);
@@ -62,9 +62,7 @@ export function Story() {
   const handleFavoriteToggle = async (checked) => {
     setIsFavorite(checked);
     try {
-      await fetch(`/api/favorites/${selectedStory.id}`, {
-        method: 'POST',
-      });
+      await fetch(`/api/favorites/${selectedStory.id}`, { method: 'POST' });
     } catch (err) {
       console.error('Error toggling favorite:', err);
     }
