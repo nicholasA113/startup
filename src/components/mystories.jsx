@@ -7,7 +7,13 @@ export function MyStories() {
   const navigate = useNavigate();
   const [myStories, setMyStories] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const user = JSON.parse(localStorage.getItem('tempUser')) || { username: 'Guest' };
+
+  const storedUser =
+    JSON.parse(localStorage.getItem('user')) ||
+    JSON.parse(localStorage.getItem('tempUser')) ||
+    { username: 'Guest' };
+
+  const username = storedUser.username || 'Guest';
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -45,7 +51,7 @@ export function MyStories() {
 
       <section id="sections-page">
         <header id="page-title"><b><u>My Stories</u></b></header>
-        <p><u>{user.username}'s Stories</u></p>
+        <p><u>{username}’s Stories</u></p>
 
         {myStories.length > 0 ? (
           myStories.map((story) => (
@@ -91,7 +97,9 @@ export function MyStories() {
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
+          Github
+        </NavLink>
       </footer>
     </main>
   );
