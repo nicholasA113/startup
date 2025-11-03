@@ -36,14 +36,17 @@ apiRouter.post('/auth/login', async (req, res) => {
     user.token = uuid.v4();
     setAuthCookie(res, user.token);
     res.send({ username: user.username });
-  } else {
+  } 
+  else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 });
 
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) delete user.token;
+  if (user) {
+    delete user.token
+  };
   res.clearCookie(authCookieName);
   res.status(204).end();
 });
@@ -53,7 +56,8 @@ const verifyAuth = async (req, res, next) => {
   if (user) {
     req.user = user;
     next();
-  } else {
+  } 
+  else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
@@ -79,6 +83,7 @@ apiRouter.post('/stories', async (req, res) => {
     postToCommunity,
     author: storyAuthor,
   };
+
   stories.push(newStory);
   res.send(newStory);
 });
@@ -86,30 +91,30 @@ apiRouter.post('/stories', async (req, res) => {
 apiRouter.put('/stories/:id', verifyAuth, (req, res) => {
   const id = req.params.id;
   const story = stories.find(s => s.id === id);
-  if (!story) return res.status(404).send({ msg: 'Story not found' });
-
+  if (!story) {
+    return res.status(404).send({ msg: 'Story not found' })
+  };
   if (story.author !== req.user.username) {
     return res.status(403).send({ msg: 'Forbidden' });
-  }
-
+  };
   if (typeof req.body.postToCommunity === 'boolean') {
     story.postToCommunity = req.body.postToCommunity;
-  }
+  };
   if (typeof req.body.title === 'string') {
     story.title = req.body.title;
-  }
+  };
   if (typeof req.body.content === 'string') {
     story.content = req.body.content;
-  }
-
+  };
   res.send(story);
 });
 
 
 apiRouter.get('/favorites', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  if (!user) return res.status(401).send({ msg: 'Unauthorized' });
-
+  if (!user) {
+    return res.status(401).send({ msg: 'Unauthorized' })
+  };
   const userFavorites = favorites[user.username] || [];
   const favoriteStories = stories.filter(story => userFavorites.includes(story.id));
   res.send(favoriteStories);
@@ -131,7 +136,8 @@ apiRouter.post('/favorites/:storyId', async (req, res) => {
   const alreadyFavorited = favorites[username].includes(storyId);
   if (alreadyFavorited) {
     favorites[username] = favorites[username].filter(id => id !== storyId);
-  } else {
+  } 
+  else {
     favorites[username].push(storyId);
   }
 
@@ -147,7 +153,9 @@ async function createUser(username, password) {
 }
 
 async function findUser(field, value) {
-  if (!value) return null;
+  if (!value) {
+    return null
+  };
   return users.find(u => u[field] === value);
 }
 
@@ -175,7 +183,6 @@ apiRouter.get('/quote', async (_req, res) => {
     res.status(500).send({ error: 'Failed to fetch quote', details: err.message });
   }
 });
-
 
 app.use((err, _req, res, _next) => {
   res.status(500).send({ type: err.name, message: err.message });

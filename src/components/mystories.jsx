@@ -23,7 +23,6 @@ export function MyStories() {
           const data = await resStories.json();
           setMyStories(data);
         }
-
         const resFavs = await fetch('/api/favorites');
         if (resFavs.ok) {
           const favData = await resFavs.json();

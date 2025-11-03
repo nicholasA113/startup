@@ -11,7 +11,9 @@ export function CommunityBoard() {
     async function fetchStories() {
       try {
         const response = await fetch('/api/stories');
-        if (!response.ok) throw new Error('Failed to load stories');
+        if (!response.ok) {
+            throw new Error('Failed to load stories')
+        };
 
         const stories = await response.json();
         setCommunityBoardStories(stories);

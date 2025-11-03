@@ -86,7 +86,8 @@ export function Read() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
-      } else {
+      } 
+      else {
         console.warn('Story must be saved before it can be favorited.');
       }
     } catch (err) {
