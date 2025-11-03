@@ -8,18 +8,21 @@ export function CreateStory() {
   const [quote, setQuote] = useState('');
   const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchQuote = async () => {
-      try {
-        const response = await fetch('/api/quote');
-        const data = await response.json();
+        try {
+        const res = await fetch('/api/quote');
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const data = await res.json();
         setQuote(data[0]?.quote || 'Inspiration unavailable right now!');
-      } catch {
+        } catch (err) {
+        console.error(err);
         setQuote('Error fetching quote.');
-      }
+        }
     };
     fetchQuote();
-  }, []);
+    }, []);
+
 
   return (
     <main id="main">
