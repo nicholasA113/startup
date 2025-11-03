@@ -112,12 +112,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+**Node.js/Express HTTP service** - created a node.js file that houses all endpoints  
+**Static middleware for frontend** - implemented app.use calls in index.js and a custom verifyAuth function  
+**Calls to third party endpoints** - Implemented third party endpoint in createstory.jsx for a random quote generator  
+**Backend service endpoints** - endpoints for login, logout, post for story, get, etc.  
+**Frontend calls service endpoints** - Calls endpoints when logging in, creating/saving a story, fetching the quote, etc.  
+**Supports registration, login, logout, and restricted endpoint** - endpoints for login, logout, and a verifyAuth function to prevent restricted access.  
 
 
 ## 🚀 DB deliverable
