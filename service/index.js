@@ -163,12 +163,12 @@ function setAuthCookie(res, authToken) {
 
 apiRouter.get('/quote', async (_req, res) => {
   try {
-    const response = await fetch('https://api.quotable.io/random');
+    const response = await fetch('https://zenquotes.io/api/random');
     if (!response.ok) {
       throw new Error(`API error: ${response.statusText}`);
     }
-    const data = await response.json();
-    res.send([{ quote: data.content, author: data.author }]);
+    const quote = await response.json();
+    res.send(quote);
   } catch (err) {
     console.error('Error fetching quote:', err);
     res.status(500).send({ error: 'Failed to fetch quote' });
