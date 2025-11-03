@@ -2,7 +2,6 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
-const fetch = global.fetch;
 require('dotenv').config();
 
 const app = express();
@@ -162,18 +161,21 @@ function setAuthCookie(res, authToken) {
 }
 
 apiRouter.get('/quote', async (_req, res) => {
+  console.log('→ /api/quote called');
   try {
-    const response = await fetch('https://api.quotable.io/random');
+    const response = await fetch('https://zenquotes.io/api/random');
     if (!response.ok) {
       throw new Error(`API error: ${response.statusText}`);
     }
     const data = await response.json();
-    res.send([{ quote: data.content, author: data.author }]);
+    const quoteData = data[0];
+    res.send([{ quote: quoteData.q, author: quoteData.a }]);
   } catch (err) {
     console.error('Error fetching quote:', err);
-    res.status(500).send({ error: 'Failed to fetch quote' });
+    res.status(500).send({ error: 'Failed to fetch quote', details: err.message });
   }
 });
+
 
 app.use((err, _req, res, _next) => {
   res.status(500).send({ type: err.name, message: err.message });
