@@ -157,7 +157,6 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-/* --- GLOBAL ERROR HANDLING --- */
 app.use((err, _req, res, _next) => {
   res.status(500).send({ type: err.name, message: err.message });
 });
