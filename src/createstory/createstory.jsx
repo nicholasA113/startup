@@ -6,23 +6,43 @@ import './createstory.css';
 export function CreateStory() {
   const navigate = useNavigate();
   const [quote, setQuote] = useState('');
-  const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
+  const [username, setUsername] = useState('Guest');
 
-    useEffect(() => {
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          const data = await res.json();
+          setUsername(data.username || 'Guest');
+        }
+      } catch {
+        setUsername('Guest');
+      }
+    }
+
+    fetchUser();
+  }, []);
+  
+  useEffect(() => {
     const fetchQuote = async () => {
-        try {
+      try {
         const res = await fetch('/api/quote');
         if (!res.ok) throw new Error(`Server error ${res.status}`);
         const data = await res.json();
         setQuote(data[0]?.quote || 'Inspiration unavailable right now!');
-        } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
         setQuote('Error fetching quote.');
-        }
+      }
     };
     fetchQuote();
-    }, []);
+  }, []);
 
+  const handleStorySelect = (story) => {
+    navigate(`/write/${story}`);
+  };
 
   return (
     <main id="main">
@@ -34,7 +54,7 @@ export function CreateStory() {
           height="150"
           alt="mad-libs"
         />
-        <p>Welcome, {user.username}!</p>
+        <p>Welcome, {username}!</p>
         <aside>
           <p><i>"{quote}"</i></p>
         </aside>
@@ -54,10 +74,7 @@ export function CreateStory() {
             <Button
               key={story}
               className="buttons"
-              onClick={() => {
-                localStorage.setItem('selectedStory', story);
-                navigate('/write');
-              }}
+              onClick={() => handleStorySelect(story)}
             >
               {story.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
             </Button>
