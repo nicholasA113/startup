@@ -7,32 +7,36 @@ export function MyStories() {
   const navigate = useNavigate();
   const [myStories, setMyStories] = useState([]);
   const [favorites, setFavorites] = useState([]);
-
-  const storedUser =
-    JSON.parse(localStorage.getItem('user')) ||
-    JSON.parse(localStorage.getItem('tempUser')) ||
-    { username: 'Guest' };
-
-  const username = storedUser.username || 'Guest';
+  const [error, setError] = useState(null);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
         const resStories = await fetch('/api/mystories');
-        if (resStories.ok) {
-          const data = await resStories.json();
-          setMyStories(data);
+        if (resStories.status === 401) {
+          setError('You must be logged in to view your stories.');
+          return;
         }
+        if (!resStories.ok) {
+          throw new Error('Failed to load your stories');
+        }
+        const storiesData = await resStories.json();
+        setMyStories(storiesData);
         const resFavs = await fetch('/api/favorites');
         if (resFavs.ok) {
           const favData = await resFavs.json();
           setFavorites(favData);
         }
-      } catch (err) {
+        if (storiesData.length > 0) {
+          setUsername(storiesData[0].author);
+        }
+      } 
+      catch (err) {
         console.error('Error loading stories:', err);
+        setError('Could not load stories.');
       }
     };
-
     fetchStories();
   }, []);
 
@@ -50,47 +54,52 @@ export function MyStories() {
 
       <section id="sections-page">
         <header id="page-title"><b><u>My Stories</u></b></header>
-        <p><u>{username}’s Stories</u></p>
 
-        {myStories.length > 0 ? (
-          myStories.map((story) => (
-            <Button
-              key={story.id}
-              className="story-card"
-              onClick={() => {
-                localStorage.setItem('selectedReadStory', JSON.stringify(story));
-                navigate('/story');
-              }}
-            >
-              <b>{story.title}</b>
-              <br />
-              <i>by {story.author}</i>
-            </Button>
-          ))
-        ) : (
-          <p>No stories created yet.</p>
-        )}
+        {error && <p style={{ color: 'white', textAlign: 'center' }}>{error}</p>}
 
-        <br />
-        <p><u>Favorited Stories</u></p>
+        {!error && (
+          <>
+            <p><u>{username ? `${username}’s Stories` : 'My Stories'}</u></p>
+            {myStories.length > 0 ? (
+              myStories.map((story) => (
+                <Button
+                  key={story.id}
+                  className="story-card"
+                  onClick={() => {
+                    localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                    navigate('/story');
+                  }}
+                >
+                  <b>{story.title}</b>
+                  <br />
+                  <i>by {story.author}</i>
+                </Button>
+              ))
+            ) : (
+              <p>No stories created yet.</p>
+            )}
+            <br />
+            <p><u>Favorited Stories</u></p>
 
-        {favorites.length > 0 ? (
-          favorites.map((story) => (
-            <Button
-              key={story.id}
-              className="story-card"
-              onClick={() => {
-                localStorage.setItem('selectedReadStory', JSON.stringify(story));
-                navigate('/story');
-              }}
-            >
-              <b>{story.title}</b>
-              <br />
-              <i>by {story.author}</i>
-            </Button>
-          ))
-        ) : (
-          <p>No favorite stories yet.</p>
+            {favorites.length > 0 ? (
+              favorites.map((story) => (
+                <Button
+                  key={story.id}
+                  className="story-card"
+                  onClick={() => {
+                    localStorage.setItem('selectedReadStory', JSON.stringify(story));
+                    navigate('/story');
+                  }}
+                >
+                  <b>{story.title}</b>
+                  <br />
+                  <i>by {story.author}</i>
+                </Button>
+              ))
+            ) : (
+              <p>No favorite stories yet.</p>
+            )}
+          </>
         )}
       </section>
 
