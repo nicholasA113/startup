@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
 
-const url = `mogodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
 const db = client.db('madlibs');
 const userCollection = db.collection('user');
@@ -57,7 +57,7 @@ async function toggleFavorite(username, storyId) {
         return favoriteCollection.deleteOne({username, storyId});
     }
     else {
-        return favoriteCollection.insertOne({username, storyID});
+        return favoriteCollection.insertOne({username, storyId});
     }
 }
 
@@ -67,12 +67,17 @@ async function getFavorites(username) {
     return storyCollection.find({ id: {$in: storyIds}}).toArray();
 }
 
+async function getStory(id) {
+    return storyCollection.findOne({id});
+}
+
 module.exports = {
     getUser,
     addUser,
     getUserByToken,
     updateUserToken,
     addStory,
+    getStory,
     getUserStories,
     getCommunityStories,
     updateStory,
