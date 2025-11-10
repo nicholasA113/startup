@@ -18,13 +18,13 @@ export function Login() {
       });
 
       if (response.ok) {
-        const user = await response.json();
-        localStorage.setItem('user', JSON.stringify(user));
         navigate('/createstory');
-      } else {
+      } 
+      else {
         setError('Invalid username or password.');
       }
-    } catch (err) {
+    } 
+    catch {
       setError('Login failed. Please try again.');
     }
   };
@@ -36,17 +36,17 @@ export function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-
       if (response.ok) {
-        const user = await response.json();
-        localStorage.setItem('user', JSON.stringify(user));
         navigate('/createstory');
-      } else if (response.status === 409) {
+      } 
+      else if (response.status === 409) {
         setError('Username already exists.');
-      } else {
+      } 
+      else {
         setError('Account creation failed.');
       }
-    } catch (err) {
+    } 
+    catch {
       setError('Network error.');
     }
   };

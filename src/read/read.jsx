@@ -33,7 +33,8 @@ export function Read() {
         const favs = await res.json();
         const found = favs.some((s) => s.content === currentStory.content);
         setIsFavorited(found);
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Error checking favorites:', err);
       }
     };
@@ -48,7 +49,9 @@ export function Read() {
         body: JSON.stringify(currentStory),
       });
 
-      if (!saveRes.ok) throw new Error('Failed to save story');
+      if (!saveRes.ok) {
+        throw new Error('Failed to save story')
+      };
       const savedStory = await saveRes.json();
 
       if (isFavorited) {
@@ -57,11 +60,10 @@ export function Read() {
           headers: { 'Content-Type': 'application/json' },
         });
       }
-
       navigate('/mystories');
-    } catch (err) {
-      console.error(err);
-      alert('Error saving story.');
+    } 
+    catch (err) {
+      console.error('Error saving story:', err);
     }
   };
 
@@ -86,11 +88,9 @@ export function Read() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
-      } 
-      else {
-        console.warn('Story must be saved before it can be favorited.');
       }
-    } catch (err) {
+    } 
+    catch (err) {
       console.error('Error updating favorite:', err);
     }
   };

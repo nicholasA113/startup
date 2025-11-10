@@ -12,19 +12,16 @@ export function CommunityBoard() {
       try {
         const response = await fetch('/api/stories');
         if (!response.ok) {
-            throw new Error('Failed to load stories')
-        };
-
+          throw new Error('Failed to load stories');
+        }
         const stories = await response.json();
         setCommunityBoardStories(stories);
-        localStorage.setItem('communityBoardStories', JSON.stringify(stories));
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Error loading community board stories:', err);
-        const storedStories = JSON.parse(localStorage.getItem('communityBoardStories')) || [];
-        setCommunityBoardStories(storedStories);
+        setCommunityBoardStories([]);
       }
     }
-
     fetchStories();
   }, []);
 
@@ -44,11 +41,13 @@ export function CommunityBoard() {
         <header id="page-title"><u><b>Community Board</b></u></header>
         <br />
         {communityBoardStories.length === 0 ? (
-          <p style={{ color: 'white', textAlign: 'center' }}>No stories added to community board yet.</p>
+          <p style={{ color: 'white', textAlign: 'center' }}>
+            No stories added to community board yet.
+          </p>
         ) : (
           communityBoardStories.map((story) => (
             <Button
-              key={story.id || story.content}
+              key={story.id}
               className="story-card"
               onClick={() => {
                 localStorage.setItem('selectedReadStory', JSON.stringify(story));
