@@ -31,7 +31,9 @@ export function Story() {
         const resStories = await fetch('/api/stories', { credentials: 'include' });
         if (resStories.ok) {
           const communityStories = await resStories.json();
-          if (!mounted) return;
+          if (!mounted) {
+            return
+          };
           const onCommunity = selectedStory.id && communityStories.some(s => s.id === selectedStory.id);
           setPostToCommunity(Boolean(onCommunity));
         }
@@ -39,17 +41,20 @@ export function Story() {
         const resFav = await fetch('/api/favorites', { credentials: 'include' });
         if (resFav.ok) {
           const favStories = await resFav.json();
-          if (!mounted) return;
+          if (!mounted) {
+            return
+          };
           const fav = selectedStory.id && favStories.some(s => s.id === selectedStory.id);
           setIsFavorite(Boolean(fav));
-        } else if (resFav.status === 401) {
+        } 
+        else if (resFav.status === 401) {
           setIsFavorite(false);
         }
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Error fetching story state:', err);
       }
     }
-
     fetchState();
     return () => { mounted = false; };
   }, [selectedStory?.id]);
@@ -76,11 +81,13 @@ export function Story() {
           setPostToCommunity(prev);
           console.error('PUT /api/stories/:id failed:', res.status);
           alert('Could not update community status on the server.');
-        } else {
+        } 
+        else {
           const updated = await res.json();
           updateLocalSelectedStory(updated);
         }
-      } else {
+      } 
+      else {
         const res = await fetch('/api/stories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -96,7 +103,8 @@ export function Story() {
         if (!res.ok) {
           setPostToCommunity(prev);
           alert('Could not post story to community board.');
-        } else {
+        } 
+        else {
           const created = await res.json();
           updateLocalSelectedStory(created);
         }
@@ -117,7 +125,6 @@ export function Story() {
 
     try {
       let storyId = selectedStory.id;
-
       if (!storyId) {
         const resCreate = await fetch('/api/stories', {
           method: 'POST',
@@ -130,14 +137,12 @@ export function Story() {
             author: selectedStory.author || username,
           }),
         });
-
         if (!resCreate.ok) {
           setIsFavorite(prev);
           alert('Could not prepare story for favoriting.');
           setLoading(false);
           return;
         }
-
         const created = await resCreate.json();
         storyId = created.id;
         updateLocalSelectedStory(created);

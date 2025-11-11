@@ -15,7 +15,8 @@ export function CreateStory() {
         if (!res.ok) throw new Error(`Server error ${res.status}`);
         const data = await res.json();
         setUser(data || { username: 'Guest' });
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Error fetching user:', err);
         setUser({ username: 'Guest' });
       }
