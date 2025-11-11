@@ -34,8 +34,6 @@ export function Story() {
           if (!mounted) return;
           const onCommunity = selectedStory.id && communityStories.some(s => s.id === selectedStory.id);
           setPostToCommunity(Boolean(onCommunity));
-        } else {
-          console.warn('GET /api/stories returned', resStories.status);
         }
 
         const resFav = await fetch('/api/favorites', { credentials: 'include' });
@@ -46,8 +44,6 @@ export function Story() {
           setIsFavorite(Boolean(fav));
         } else if (resFav.status === 401) {
           setIsFavorite(false);
-        } else {
-          console.warn('GET /api/favorites returned', resFav.status);
         }
       } catch (err) {
         console.error('Error fetching story state:', err);
@@ -78,8 +74,7 @@ export function Story() {
 
         if (!res.ok) {
           setPostToCommunity(prev);
-          const text = await res.text().catch(() => 'no body');
-          console.error('PUT /api/stories/:id failed:', res.status, text);
+          console.error('PUT /api/stories/:id failed:', res.status);
           alert('Could not update community status on the server.');
         } else {
           const updated = await res.json();
@@ -100,8 +95,6 @@ export function Story() {
 
         if (!res.ok) {
           setPostToCommunity(prev);
-          const text = await res.text().catch(() => 'no body');
-          console.error('POST /api/stories failed:', res.status, text);
           alert('Could not post story to community board.');
         } else {
           const created = await res.json();
@@ -140,8 +133,6 @@ export function Story() {
 
         if (!resCreate.ok) {
           setIsFavorite(prev);
-          const text = await resCreate.text().catch(() => 'no body');
-          console.error('Failed to create story before favoriting:', resCreate.status, text);
           alert('Could not prepare story for favoriting.');
           setLoading(false);
           return;
@@ -159,14 +150,9 @@ export function Story() {
 
       if (!resFav.ok) {
         setIsFavorite(prev);
-        const text = await resFav.text().catch(() => 'no body');
-        console.error('POST /api/favorites/:id failed:', resFav.status, text);
         alert('Could not toggle favorite on server.');
       } else {
-        const favList = await resFav.json();
-        const list = Array.isArray(favList) ? favList : favList.favorites || [];
-        const isNowFav = list.some(s => s.id === storyId);
-        setIsFavorite(Boolean(isNowFav));
+        setIsFavorite(!prev);
       }
     } catch (err) {
       console.error('Error toggling favorite:', err);
@@ -222,7 +208,9 @@ export function Story() {
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
+          Github
+        </NavLink>
       </footer>
     </main>
   );
