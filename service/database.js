@@ -40,6 +40,7 @@ async function updateUserToken(username, token) {
 }
 
 async function addStory(story) {
+  story.id = String(story.id);
   return storyCollection.insertOne(story);
 }
 
@@ -51,8 +52,8 @@ function getCommunityStories() {
   return storyCollection.find({ postToCommunity: true }).toArray();
 }
 
-function getStory(id) {
-  return storyCollection.findOne({ id: id });
+async function getStory(id) {
+  return storyCollection.findOne({ id: String(id) });
 }
 
 async function updateStory(id, updates) {
@@ -75,14 +76,11 @@ async function getFavorites(username) {
   return storyCollection.find({ id: { $in: storyIds } }).toArray();
 }
 
-async function getStory(id) {
-    return storyCollection.findOne({id});
-}
-
 module.exports = {
     getUser,
     addUser,
     getUserByToken,
+    updateUser,
     updateUserToken,
     addStory,
     getStory,

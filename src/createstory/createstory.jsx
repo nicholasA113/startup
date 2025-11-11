@@ -41,7 +41,7 @@ export function CreateStory() {
   }, []);
 
   const handleStorySelect = (story) => {
-    navigate(`/write/${story}`);
+    navigate(`/write`);
   };
 
   return (

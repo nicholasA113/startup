@@ -20,8 +20,7 @@ export function Story() {
           const data = await res.json();
           setUsername(data.username || 'Guest');
         }
-      } 
-      catch {
+      } catch {
         setUsername('Guest');
       }
     }
@@ -30,27 +29,30 @@ export function Story() {
 
   useEffect(() => {
     async function fetchStoryData() {
-      if (!id) {
-        return
-      };
+      if (!id) return;
 
       try {
         const resStory = await fetch(`/api/stories/${id}`);
         if (resStory.ok) {
           const storyData = await resStory.json();
+          console.log('Story data →', storyData);
           setStory(storyData);
           setPostToCommunity(Boolean(storyData.postToCommunity));
+        } else {
+          console.error('Failed to fetch story:', resStory.status);
         }
+
         const resFavs = await fetch('/api/favorites');
         if (resFavs.ok) {
           const favData = await resFavs.json();
-          const isFav = favData.some(s => s.id === Number(id));
+          const isFav = favData.some((s) => s.id === id);
           setIsFavorite(isFav);
         }
       } catch (err) {
         console.error('Error loading story data:', err);
       }
     }
+
     fetchStoryData();
   }, [id]);
 
@@ -62,14 +64,17 @@ export function Story() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ postToCommunity: checked }),
       });
+
       if (!res.ok) {
+        const errMsg = await res.text();
+        console.error('Failed to update community status:', res.status, errMsg);
         setPostToCommunity(!checked);
-        console.error('Failed to update community status:', res.status);
+        alert('Could not update community status on the server.');
       }
-    } 
-    catch (err) {
+    } catch (err) {
       console.error('Error toggling community status:', err);
       setPostToCommunity(!checked);
+      alert('Could not update community status on the server.');
     }
   };
 
@@ -77,17 +82,25 @@ export function Story() {
     setIsFavorite(checked);
     try {
       const method = checked ? 'POST' : 'DELETE';
-      const res = await fetch(`/api/favorites/${id}`, { method });
+      const res = await fetch(`/api/favorites/${id}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storyId: id }),
+      });
+
       if (!res.ok) {
+        const errMsg = await res.text();
+        console.error('Failed to update favorites:', res.status, errMsg);
         setIsFavorite(!checked);
-        console.error('Failed to update favorites:', res.status);
+        alert('Could not toggle favorite on the server.');
       }
-    } 
-    catch (err) {
+    } catch (err) {
       console.error('Error toggling favorite:', err);
       setIsFavorite(!checked);
+      alert('Could not toggle favorite on the server.');
     }
   };
+
   if (!story) {
     return (
       <main id="read-page">
@@ -101,16 +114,30 @@ export function Story() {
       <header id="page-guidance">
         <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>
+          Create Story
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>
+          My Stories
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>
+          Community Board
+        </Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>
+          About
+        </Button>
         <hr />
       </header>
 
       <section id="story">
-        <header id="storyTitle"><b><u>{story.title}</u></b></header>
-        <p id="username"><i>by {story.author}</i></p>
+        <header id="storyTitle">
+          <b>
+            <u>{story.title}</u>
+          </b>
+        </header>
+        <p id="username">
+          <i>by {story.author}</i>
+        </p>
         <p id="storyContent">{story.content}</p>
 
         <div id="checkbox-area">
