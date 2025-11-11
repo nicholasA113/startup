@@ -25,10 +25,12 @@ export function Login() {
           localStorage.setItem('user', JSON.stringify(userData));
         }
         navigate('/createstory');
-      } else {
+      } 
+      else {
         setError('Invalid username or password.');
       }
-    } catch {
+    } 
+    catch {
       setError('Login failed. Please try again.');
     }
   };
@@ -49,12 +51,15 @@ export function Login() {
           localStorage.setItem('user', JSON.stringify(userData));
         }
         navigate('/createstory');
-      } else if (response.status === 409) {
+      } 
+      else if (response.status === 409) {
         setError('Username already exists.');
-      } else {
+      } 
+      else {
         setError('Account creation failed.');
       }
-    } catch {
+    } 
+    catch {
       setError('Network error.');
     }
   };

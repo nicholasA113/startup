@@ -8,7 +8,6 @@ export function CreateStory() {
   const [quote, setQuote] = useState('');
   const [user, setUser] = useState({ username: 'Guest' });
 
-  // 🔹 Fetch current logged-in user from backend
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -24,15 +23,17 @@ export function CreateStory() {
     fetchUser();
   }, []);
 
-  // 🔹 Fetch a quote
   useEffect(() => {
     const fetchQuote = async () => {
       try {
         const res = await fetch('/api/quote');
-        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`Server error ${res.status}`)
+        };
         const data = await res.json();
         setQuote(data[0]?.quote || 'Inspiration unavailable right now!');
-      } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
         setQuote('Error fetching quote.');
       }

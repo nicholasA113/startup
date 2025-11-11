@@ -29,7 +29,9 @@ export function Read() {
     const checkFavorite = async () => {
       try {
         const res = await fetch('/api/favorites');
-        if (!res.ok) return;
+        if (!res.ok) {
+          return
+        };
         const favs = await res.json();
         const found = favs.some((s) => s.content === currentStory.content);
         setIsFavorited(found);
@@ -66,7 +68,6 @@ export function Read() {
       console.error('Error saving story:', err);
     }
   };
-
   const handleDeleteStory = () => {
     navigate('/createstory');
   };
@@ -75,7 +76,8 @@ export function Read() {
     try {
       await handleSaveStory();
       navigate('/createstory');
-    } catch {
+    } 
+    catch {
       navigate('/createstory');
     }
   };
