@@ -18,7 +18,8 @@ export function MyStories() {
           const userData = await userRes.json();
           setUsername(userData.username);
           localStorage.setItem('user', JSON.stringify(userData));
-        } else if (userRes.status === 401) {
+        } 
+        else if (userRes.status === 401) {
           setError('You must be logged in to view your stories.');
           return;
         }
@@ -39,12 +40,12 @@ export function MyStories() {
           const favData = await resFavs.json();
           setFavorites(Array.isArray(favData) ? favData : favData.favorites || []);
         }
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Error loading stories:', err);
         setError('Could not load stories.');
       }
     };
-
     fetchUserAndStories();
   }, []);
 

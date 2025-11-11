@@ -156,7 +156,8 @@ export function Story() {
       if (!resFav.ok) {
         setIsFavorite(prev);
         alert('Could not toggle favorite on server.');
-      } else {
+      } 
+      else {
         setIsFavorite(!prev);
       }
     } catch (err) {
