@@ -124,8 +124,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
+**Stores data in MongoDB** - Created mongo database, made calls to store data in the database for stories  
+**Stores credentials in MongoDB** - Calls created that stores username and encrypted passwords in the database, retrives username in particular for various places throughout the application  
 
 ## 🚀 WebSocket deliverable
 
