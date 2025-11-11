@@ -20,22 +20,20 @@ apiRouter.post('/auth/create', async (req, res) => {
   try {
     const { username, password } = req.body;
     const existingUser = await db.getUser(username);
-
     if (existingUser) {
       return res.status(409).send({ msg: 'Existing user' });
     }
-
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = {
       username,
       password: passwordHash,
       token: uuid.v4(),
     };
-
     await db.addUser(newUser);
     setAuthCookie(res, newUser.token);
     res.send({ username: newUser.username });
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error creating user:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -48,12 +46,15 @@ apiRouter.get('/user', async (req, res) => {
       return res.status(401).send({ msg: 'Unauthorized' });
     }
     const user = await db.getUserByToken(token);
+
     if (user) {
       res.send({ username: user.username });
-    } else {
+    } 
+    else {
       res.status(401).send({ msg: 'Unauthorized' });
     }
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error fetching user:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -69,10 +70,12 @@ apiRouter.post('/auth/login', async (req, res) => {
       await db.updateUser(user);
       setAuthCookie(res, user.token);
       res.send({ username: user.username });
-    } else {
+    } 
+    else {
       res.status(401).send({ msg: 'Unauthorized' });
     }
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error logging in:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -87,7 +90,8 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     }
     res.clearCookie(authCookieName);
     res.status(204).end();
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error logging out:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -98,7 +102,8 @@ const verifyAuth = async (req, res, next) => {
   if (user) {
     req.user = user;
     next();
-  } else {
+  }
+  else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
@@ -118,7 +123,8 @@ apiRouter.get('/stories/:id', async (req, res) => {
       return res.status(404).send({ msg: 'Story not found' });
     }
     res.send(story);
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error getting story:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -158,12 +164,17 @@ apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
     if (typeof req.body.postToCommunity === 'boolean') {
       updatedFields.postToCommunity = req.body.postToCommunity;
     }
-    if (req.body.title) updatedFields.title = req.body.title;
-    if (req.body.content) updatedFields.content = req.body.content;
+    if (req.body.title) {
+      updatedFields.title = req.body.title
+    };
+    if (req.body.content) {
+      updatedFields.content = req.body.content
+    };
 
     await db.updateStory(id, updatedFields);
     res.send({ ...story, ...updatedFields });
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error updating story:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -173,7 +184,8 @@ apiRouter.get('/favorites', verifyAuth, async (req, res) => {
   try {
     const favoriteStories = await db.getFavorites(req.user.username);
     res.send(favoriteStories);
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error fetching favorites:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -188,7 +200,8 @@ apiRouter.post('/favorites/:storyId', verifyAuth, async (req, res) => {
 
     const updatedFavorites = await db.toggleFavorite(req.user.username, storyId);
     res.json(updatedFavorites);
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error toggling favorite:', err);
     res.status(500).send({ type: err.name, message: err.message });
   }
@@ -204,7 +217,8 @@ apiRouter.get('/quote', async (_req, res) => {
     const data = await response.json();
     const quoteData = data[0];
     res.send([{ quote: quoteData.q, author: quoteData.a }]);
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('Error fetching quote:', err);
     res.status(500).send({ error: 'Failed to fetch quote', details: err.message });
   }
