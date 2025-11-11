@@ -13,7 +13,8 @@ const favoriteCollection = db.collection('favorite');
   try {
     await db.command({ ping: 1 });
     console.log('Connected to database');
-  } catch (ex) {
+  } 
+  catch (ex) {
     console.error(`Unable to connect to database with ${url}: ${ex.message}`);
     process.exit(1);
   }
