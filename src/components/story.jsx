@@ -1,147 +1,201 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, NavLink, useParams } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import '../read/read.css';
 
 export function Story() {
   const navigate = useNavigate();
-  const { id } = useParams();
 
-  const [story, setStory] = useState(null);
-  const [username, setUsername] = useState('Guest');
+  const storedUser =
+    JSON.parse(localStorage.getItem('user')) ||
+    JSON.parse(localStorage.getItem('tempUser')) ||
+    { username: 'Guest' };
+  const username = storedUser.username;
+
+  const raw = localStorage.getItem('selectedReadStory');
+  const selectedStory = raw ? JSON.parse(raw) : null;
+
   const [postToCommunity, setPostToCommunity] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  if (!selectedStory) {
+    return <main id="read-page"><p>No story selected</p></main>;
+  }
 
   useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await fetch('/api/user');
-        if (res.ok) {
-          const data = await res.json();
-          setUsername(data.username || 'Guest');
-        }
-      } catch {
-        setUsername('Guest');
-      }
-    }
-    fetchUser();
-  }, []);
+    let mounted = true;
 
-  useEffect(() => {
-    async function fetchStoryData() {
-      if (!id) return;
-
+    async function fetchState() {
       try {
-        const resStory = await fetch(`/api/stories/${id}`);
-        if (resStory.ok) {
-          const storyData = await resStory.json();
-          console.log('Story data →', storyData);
-          setStory(storyData);
-          setPostToCommunity(Boolean(storyData.postToCommunity));
+        const resStories = await fetch('/api/stories', { credentials: 'include' });
+        if (resStories.ok) {
+          const communityStories = await resStories.json();
+          if (!mounted) return;
+          const onCommunity = selectedStory.id && communityStories.some(s => s.id === selectedStory.id);
+          setPostToCommunity(Boolean(onCommunity));
         } else {
-          console.error('Failed to fetch story:', resStory.status);
+          console.warn('GET /api/stories returned', resStories.status);
         }
 
-        const resFavs = await fetch('/api/favorites');
-        if (resFavs.ok) {
-          const favData = await resFavs.json();
-          const isFav = favData.some((s) => s.id === id);
-          setIsFavorite(isFav);
+        const resFav = await fetch('/api/favorites', { credentials: 'include' });
+        if (resFav.ok) {
+          const favStories = await resFav.json();
+          if (!mounted) return;
+          const fav = selectedStory.id && favStories.some(s => s.id === selectedStory.id);
+          setIsFavorite(Boolean(fav));
+        } else if (resFav.status === 401) {
+          setIsFavorite(false);
+        } else {
+          console.warn('GET /api/favorites returned', resFav.status);
         }
       } catch (err) {
-        console.error('Error loading story data:', err);
+        console.error('Error fetching story state:', err);
       }
     }
 
-    fetchStoryData();
-  }, [id]);
+    fetchState();
+    return () => { mounted = false; };
+  }, [selectedStory?.id]);
+
+  const updateLocalSelectedStory = (storyObj) => {
+    localStorage.setItem('selectedReadStory', JSON.stringify(storyObj));
+  };
 
   const handleCommunityToggle = async (checked) => {
+    const prev = postToCommunity;
     setPostToCommunity(checked);
-    try {
-      const res = await fetch(`/api/stories/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postToCommunity: checked }),
-      });
+    setLoading(true);
 
-      if (!res.ok) {
-        const errMsg = await res.text();
-        console.error('Failed to update community status:', res.status, errMsg);
-        setPostToCommunity(!checked);
-        alert('Could not update community status on the server.');
+    try {
+      if (selectedStory.id) {
+        const res = await fetch(`/api/stories/${selectedStory.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ postToCommunity: checked }),
+        });
+
+        if (!res.ok) {
+          setPostToCommunity(prev);
+          const text = await res.text().catch(() => 'no body');
+          console.error('PUT /api/stories/:id failed:', res.status, text);
+          alert('Could not update community status on the server.');
+        } else {
+          const updated = await res.json();
+          updateLocalSelectedStory(updated);
+        }
+      } else {
+        const res = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            title: selectedStory.title,
+            content: selectedStory.content,
+            postToCommunity: checked,
+            author: selectedStory.author || username,
+          }),
+        });
+
+        if (!res.ok) {
+          setPostToCommunity(prev);
+          const text = await res.text().catch(() => 'no body');
+          console.error('POST /api/stories failed:', res.status, text);
+          alert('Could not post story to community board.');
+        } else {
+          const created = await res.json();
+          updateLocalSelectedStory(created);
+        }
       }
     } catch (err) {
       console.error('Error toggling community status:', err);
-      setPostToCommunity(!checked);
-      alert('Could not update community status on the server.');
+      setPostToCommunity(prev);
+      alert('Network error toggling community status.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleFavoriteToggle = async (checked) => {
+    const prev = isFavorite;
     setIsFavorite(checked);
+    setLoading(true);
+
     try {
-      const method = checked ? 'POST' : 'DELETE';
-      const res = await fetch(`/api/favorites/${id}`, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ storyId: id }),
+      let storyId = selectedStory.id;
+
+      if (!storyId) {
+        const resCreate = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            title: selectedStory.title,
+            content: selectedStory.content,
+            postToCommunity: false,
+            author: selectedStory.author || username,
+          }),
+        });
+
+        if (!resCreate.ok) {
+          setIsFavorite(prev);
+          const text = await resCreate.text().catch(() => 'no body');
+          console.error('Failed to create story before favoriting:', resCreate.status, text);
+          alert('Could not prepare story for favoriting.');
+          setLoading(false);
+          return;
+        }
+
+        const created = await resCreate.json();
+        storyId = created.id;
+        updateLocalSelectedStory(created);
+      }
+
+      const resFav = await fetch(`/api/favorites/${storyId}`, {
+        method: 'POST',
+        credentials: 'include',
       });
 
-      if (!res.ok) {
-        const errMsg = await res.text();
-        console.error('Failed to update favorites:', res.status, errMsg);
-        setIsFavorite(!checked);
-        alert('Could not toggle favorite on the server.');
+      if (!resFav.ok) {
+        setIsFavorite(prev);
+        const text = await resFav.text().catch(() => 'no body');
+        console.error('POST /api/favorites/:id failed:', resFav.status, text);
+        alert('Could not toggle favorite on server.');
+      } else {
+        const favList = await resFav.json();
+        const list = Array.isArray(favList) ? favList : favList.favorites || [];
+        const isNowFav = list.some(s => s.id === storyId);
+        setIsFavorite(Boolean(isNowFav));
       }
     } catch (err) {
       console.error('Error toggling favorite:', err);
-      setIsFavorite(!checked);
-      alert('Could not toggle favorite on the server.');
+      setIsFavorite(prev);
+      alert('Network error toggling favorite.');
+    } finally {
+      setLoading(false);
     }
   };
-
-  if (!story) {
-    return (
-      <main id="read-page">
-        <p>Loading story...</p>
-      </main>
-    );
-  }
 
   return (
     <main id="read-page">
       <header id="page-guidance">
         <br />
         <h1 id="mad-libs-title">Mad Libs©</h1>
-        <Button className="buttons" onClick={() => navigate('/createstory')}>
-          Create Story
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/mystories')}>
-          My Stories
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/communityboard')}>
-          Community Board
-        </Button>
-        <Button className="buttons" onClick={() => navigate('/about')}>
-          About
-        </Button>
+        <Button className="buttons" onClick={() => navigate('/createstory')}>Create Story</Button>
+        <Button className="buttons" onClick={() => navigate('/mystories')}>My Stories</Button>
+        <Button className="buttons" onClick={() => navigate('/communityboard')}>Community Board</Button>
+        <Button className="buttons" onClick={() => navigate('/about')}>About</Button>
         <hr />
       </header>
 
       <section id="story">
-        <header id="storyTitle">
-          <b>
-            <u>{story.title}</u>
-          </b>
-        </header>
-        <p id="username">
-          <i>by {story.author}</i>
-        </p>
-        <p id="storyContent">{story.content}</p>
+        <header id="storyTitle"><b><u>{selectedStory.title}</u></b></header>
+        <p id="username"><i>by {selectedStory.author}</i></p>
+        <p id="storyContent">{selectedStory.content}</p>
 
         <div id="checkbox-area">
-          {username.toLowerCase() === (story.author || '').toLowerCase() && (
+          {username.toLowerCase() === (selectedStory.author || '').toLowerCase() && (
             <>
               <label htmlFor="checkbox1">Post to Community Board?</label>
               <input
@@ -149,6 +203,7 @@ export function Story() {
                 id="checkbox1"
                 checked={postToCommunity}
                 onChange={(e) => handleCommunityToggle(e.target.checked)}
+                disabled={loading}
               />
               <span> | </span>
             </>
@@ -160,15 +215,14 @@ export function Story() {
             id="checkbox2"
             checked={isFavorite}
             onChange={(e) => handleFavoriteToggle(e.target.checked)}
+            disabled={loading}
           />
         </div>
       </section>
 
       <footer className="footer">
         <hr />
-        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">
-          Github
-        </NavLink>
+        <NavLink className="nav-link" to="https://github.com/nicholasA113/startup">Github</NavLink>
       </footer>
     </main>
   );

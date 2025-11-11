@@ -6,24 +6,25 @@ import './createstory.css';
 export function CreateStory() {
   const navigate = useNavigate();
   const [quote, setQuote] = useState('');
-  const [username, setUsername] = useState('Guest');
+  const [user, setUser] = useState({ username: 'Guest' });
 
+  // 🔹 Fetch current logged-in user from backend
   useEffect(() => {
-    async function fetchUser() {
+    const fetchUser = async () => {
       try {
-        const res = await fetch('/api/user');
-        if (res.ok) {
-          const data = await res.json();
-          setUsername(data.username || 'Guest');
-        }
-      } catch {
-        setUsername('Guest');
+        const res = await fetch('/api/user', { credentials: 'include' });
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const data = await res.json();
+        setUser(data || { username: 'Guest' });
+      } catch (err) {
+        console.error('Error fetching user:', err);
+        setUser({ username: 'Guest' });
       }
-    }
-
+    };
     fetchUser();
   }, []);
-  
+
+  // 🔹 Fetch a quote
   useEffect(() => {
     const fetchQuote = async () => {
       try {
@@ -31,18 +32,13 @@ export function CreateStory() {
         if (!res.ok) throw new Error(`Server error ${res.status}`);
         const data = await res.json();
         setQuote(data[0]?.quote || 'Inspiration unavailable right now!');
-      } 
-      catch (err) {
+      } catch (err) {
         console.error(err);
         setQuote('Error fetching quote.');
       }
     };
     fetchQuote();
   }, []);
-
-  const handleStorySelect = (story) => {
-    navigate(`/write`);
-  };
 
   return (
     <main id="main">
@@ -54,7 +50,7 @@ export function CreateStory() {
           height="150"
           alt="mad-libs"
         />
-        <p>Welcome, {username}!</p>
+        <p>Welcome, {user.username}!</p>
         <aside>
           <p><i>"{quote}"</i></p>
         </aside>
@@ -74,7 +70,10 @@ export function CreateStory() {
             <Button
               key={story}
               className="buttons"
-              onClick={() => handleStorySelect(story)}
+              onClick={() => {
+                localStorage.setItem('selectedStory', story);
+                navigate('/write');
+              }}
             >
               {story.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
             </Button>

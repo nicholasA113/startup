@@ -14,17 +14,21 @@ export function Login() {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
+        const userRes = await fetch('/api/user', { credentials: 'include' });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          localStorage.setItem('user', JSON.stringify(userData));
+        }
         navigate('/createstory');
-      } 
-      else {
+      } else {
         setError('Invalid username or password.');
       }
-    } 
-    catch {
+    } catch {
       setError('Login failed. Please try again.');
     }
   };
@@ -34,19 +38,23 @@ export function Login() {
       const response = await fetch('/api/auth/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
+
       if (response.ok) {
+        const userRes = await fetch('/api/user', { credentials: 'include' });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          localStorage.setItem('user', JSON.stringify(userData));
+        }
         navigate('/createstory');
-      } 
-      else if (response.status === 409) {
+      } else if (response.status === 409) {
         setError('Username already exists.');
-      } 
-      else {
+      } else {
         setError('Account creation failed.');
       }
-    } 
-    catch {
+    } catch {
       setError('Network error.');
     }
   };

@@ -6,9 +6,8 @@ import { Write } from './write/write';
 import { Read } from './read/read';
 import { MyStories } from './components/mystories';
 import { Story } from './components/story';
-import { CommunityBoard} from './communityboard/communityboard';
+import { CommunityBoard } from './communityboard/communityboard';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 
 export default function App() {
   return (

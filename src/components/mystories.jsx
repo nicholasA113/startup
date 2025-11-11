@@ -11,9 +11,19 @@ export function MyStories() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const fetchStories = async () => {
+    const fetchUserAndStories = async () => {
       try {
-        const resStories = await fetch('/api/mystories');
+        const userRes = await fetch('/api/user', { credentials: 'include' });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUsername(userData.username);
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else if (userRes.status === 401) {
+          setError('You must be logged in to view your stories.');
+          return;
+        }
+
+        const resStories = await fetch('/api/mystories', { credentials: 'include' });
         if (resStories.status === 401) {
           setError('You must be logged in to view your stories.');
           return;
@@ -23,21 +33,19 @@ export function MyStories() {
         }
         const storiesData = await resStories.json();
         setMyStories(storiesData);
-        const resFavs = await fetch('/api/favorites');
+
+        const resFavs = await fetch('/api/favorites', { credentials: 'include' });
         if (resFavs.ok) {
           const favData = await resFavs.json();
-          setFavorites(favData);
+          setFavorites(Array.isArray(favData) ? favData : favData.favorites || []);
         }
-        if (storiesData.length > 0) {
-          setUsername(storiesData[0].author);
-        }
-      } 
-      catch (err) {
+      } catch (err) {
         console.error('Error loading stories:', err);
         setError('Could not load stories.');
       }
     };
-    fetchStories();
+
+    fetchUserAndStories();
   }, []);
 
   return (
@@ -78,6 +86,7 @@ export function MyStories() {
             ) : (
               <p>No stories created yet.</p>
             )}
+
             <br />
             <p><u>Favorited Stories</u></p>
 

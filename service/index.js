@@ -187,7 +187,7 @@ apiRouter.post('/favorites/:storyId', verifyAuth, async (req, res) => {
     }
 
     const updatedFavorites = await db.toggleFavorite(req.user.username, storyId);
-    res.send(updatedFavorites);
+    res.json(updatedFavorites);
   } catch (err) {
     console.error('Error toggling favorite:', err);
     res.status(500).send({ type: err.name, message: err.message });
