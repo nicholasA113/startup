@@ -67,6 +67,6 @@ const styles = {
     fontSize: '16px',
     zIndex: 9999,
     boxShadow: '0px 4px 15px rgba(0,0,0,0.2)',
-    animation: 'fadeIn 0.3s ease-in-out',
+    animation: 'slideUp 0.5s ease-out',
   },
 };
