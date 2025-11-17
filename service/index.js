@@ -168,17 +168,16 @@ apiRouter.post('/stories', verifyAuth, async (req, res) => {
     postToCommunity,
     author: req.user.username,
   };
-
   await db.addStory(newStory);
-  res.send(newStory);
-
   if (newStory.postToCommunity) {
     broadcast({
-      type: 'NEW_STORY',
-      story: newStory
+      type: 'broadcast',
+      message: `${req.user.username} posted a new community story: "${newStory.title}"`
     });
   }
+  res.send(newStory);
 });
+
 
 apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
   try {
