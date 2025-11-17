@@ -172,7 +172,7 @@ apiRouter.post('/stories', verifyAuth, async (req, res) => {
   if (newStory.postToCommunity) {
     broadcast({
       type: 'broadcast',
-      message: `${req.user.username} posted a new community story: "${newStory.title}"`
+      message: `${req.user.username} posted a new story to the community board: "${newStory.title}"`
     });
   }
   res.send(newStory);
