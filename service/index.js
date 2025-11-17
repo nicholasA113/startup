@@ -4,7 +4,7 @@ const express = require('express');
 const uuid = require('uuid');
 require('dotenv').config();
 const db = require('./database.js');
-const { peerProxy } = require('./peerProxy'); // <-- import peerProxy
+const { peerProxy } = require('./peerProxy');
 
 const app = express();
 const authCookieName = 'token';
