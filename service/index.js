@@ -155,7 +155,7 @@ apiRouter.post('/stories', verifyAuth, async (req, res) => {
   if (newStory.postToCommunity) {
     broadcast({
       type: 'broadcast',
-      message: `${req.user.username} posted a story to the community board: "${newStory.title}"`,
+      message: `${req.user.username} posted a new story to the community board: "${newStory.title}"`,
     });
   }
 
@@ -186,7 +186,7 @@ apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
     if (!story.postToCommunity && updatedFields.postToCommunity) {
       broadcast({
         type: 'broadcast',
-        message: `${req.user.username} posted a story to the community board: "${story.title}"`,
+        message: `${req.user.username} posted a new story to the community board: "${story.title}"`,
       });
     }
     res.send({ ...story, ...updatedFields });
