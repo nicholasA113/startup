@@ -16,6 +16,30 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
+
+
+const { WebSocketServer } = require('ws');
+
+const server = app.listen(port, () =>
+  console.log(`Listening on port ${port}`)
+);
+
+const wss = new WebSocketServer({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected to WebSocket');
+});
+
+function broadcast(data) {
+  const json = JSON.stringify(data);
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(json);
+    }
+  });
+}
+
+
 apiRouter.post('/auth/create', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -147,6 +171,13 @@ apiRouter.post('/stories', verifyAuth, async (req, res) => {
 
   await db.addStory(newStory);
   res.send(newStory);
+
+  if (newStory.postToCommunity) {
+    broadcast({
+      type: 'NEW_STORY',
+      story: newStory
+    });
+  }
 });
 
 apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
@@ -232,6 +263,7 @@ function setAuthCookie(res, authToken) {
     sameSite: 'strict',
   });
 }
+
 app.use((err, _req, res, _next) => {
   console.error('Unhandled error:', err);
   res.status(500).send({ type: err.name, message: err.message });
@@ -240,5 +272,3 @@ app.use((err, _req, res, _next) => {
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
