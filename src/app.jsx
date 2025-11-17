@@ -14,7 +14,8 @@ export default function App() {
 
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const ws = new WebSocket(`${protocol}://${window.location.host}`);
+    const ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
+    
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
