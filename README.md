@@ -131,8 +131,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+**Backend listens for WebSocket connection** - peerProxy file creates the websocket server  
+**Frontend makes WebSocket connection** - establishes websocket connection once a user logins in  
+**Data sent over WebSocket connection** - message broadcast to all logged in users when a user has saved a story to the community board, and whenever the communityboard checkmark is toggled on for a story  
+**WebSocket data displayed** - Messaged displayed on the bottom of the page when data has been sent over a websocket connection  
+**Application is fully functional** - App is fully functional, with login capabilities, ability to create a madlib, save and share stories to communityboard or favorites section, and websocket messages sent when a user has publicly shared a story to the communityboard  
