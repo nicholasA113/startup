@@ -4,6 +4,7 @@ const express = require('express');
 const uuid = require('uuid');
 require('dotenv').config();
 const db = require('./database.js');
+const { peerProxy } = require('./peerProxy'); // <-- import peerProxy
 
 const app = express();
 const authCookieName = 'token';
@@ -16,29 +17,11 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-
-
-const { WebSocketServer } = require('ws');
-
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}`)
 );
 
-const wss = new WebSocketServer({ server });
-
-wss.on('connection', (ws) => {
-  console.log('Client connected to WebSocket');
-});
-
-function broadcast(data) {
-  const json = JSON.stringify(data);
-  wss.clients.forEach(client => {
-    if (client.readyState === 1) {
-      client.send(json);
-    }
-  });
-}
-
+const { broadcast } = peerProxy(server);
 
 apiRouter.post('/auth/create', async (req, res) => {
   try {
@@ -172,12 +155,12 @@ apiRouter.post('/stories', verifyAuth, async (req, res) => {
   if (newStory.postToCommunity) {
     broadcast({
       type: 'broadcast',
-      message: `${req.user.username} posted a new story to the community board: "${newStory.title}"`
+      message: `${req.user.username} posted a new story to the community board: "${newStory.title}"`,
     });
   }
+
   res.send(newStory);
 });
-
 
 apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
   try {
