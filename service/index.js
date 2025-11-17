@@ -172,19 +172,23 @@ apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
     if (story.author !== req.user.username) {
       return res.status(403).send({ msg: 'Forbidden' });
     }
-
     const updatedFields = {};
     if (typeof req.body.postToCommunity === 'boolean') {
       updatedFields.postToCommunity = req.body.postToCommunity;
     }
     if (req.body.title) {
-      updatedFields.title = req.body.title
-    };
+      updatedFields.title = req.body.title;
+    }
     if (req.body.content) {
-      updatedFields.content = req.body.content
-    };
-
+      updatedFields.content = req.body.content;
+    }
     await db.updateStory(id, updatedFields);
+    if (!story.postToCommunity && updatedFields.postToCommunity) {
+      broadcast({
+        type: 'broadcast',
+        message: `${req.user.username} posted a new story to the community board: "${story.title}"`,
+      });
+    }
     res.send({ ...story, ...updatedFields });
   } 
   catch (err) {
@@ -192,6 +196,8 @@ apiRouter.put('/stories/:id', verifyAuth, async (req, res) => {
     res.status(500).send({ type: err.name, message: err.message });
   }
 });
+
+
 
 apiRouter.get('/favorites', verifyAuth, async (req, res) => {
   try {
