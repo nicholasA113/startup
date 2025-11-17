@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Login } from './login/login';
 import { CreateStory } from './createstory/createstory';
 import { About } from './about/about';
@@ -10,6 +10,24 @@ import { CommunityBoard } from './communityboard/communityboard';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export default function App() {
+
+  useEffect(() => {
+    const websocket = new WebSocket(`ws://${window.location.host}`);
+    websocket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      window.dispatchEvent(
+        new CustomEvent("ws-message", { detail: data })
+      );
+    };
+    websocket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+    return () => websocket.close();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
